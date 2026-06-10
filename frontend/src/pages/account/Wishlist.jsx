@@ -20,14 +20,14 @@ export default function Wishlist() {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-7">
         <h2 className="font-heading text-[#F5F0E8] text-2xl font-light mb-7">
-          My Wishlist <span className="text-[#7A8F7C] font-light text-lg">({items.length})</span>
+          My Wishlist <span className="text-[#9AAA9C] font-light text-lg">({items.length})</span>
         </h2>
 
         {items.length === 0 ? (
           <div className="text-center py-16">
-            <Heart className="w-14 h-14 text-[#2A3A2C] mx-auto mb-4" />
+            <Heart className="w-14 h-14 text-[#5A6A5C] mx-auto mb-4" />
             <h3 className="font-heading text-[#F5F0E8] text-xl font-light mb-2">Your wishlist is empty</h3>
-            <p className="text-[#7A8F7C] mb-6 font-light">Save products you love to revisit later</p>
+            <p className="text-[#9AAA9C] mb-6 font-light">Save products you love to revisit later</p>
             <Link to="/products" className="inline-flex items-center gap-2 px-7 py-3 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-full transition-colors">
               Browse Products
             </Link>
@@ -47,7 +47,7 @@ export default function Wishlist() {
                   <div className="flex gap-2 mt-2.5">
                     <button
                       onClick={() => moveToCart(product)}
-                      className="flex items-center gap-1 px-3 py-1.5 bg-[#1E4620] hover:bg-[#2D5A32] text-[#F5F0E8] text-xs font-light rounded-lg transition-colors"
+                      className="flex items-center gap-1 px-3 py-1.5 bg-[#1E4620] hover:bg-[#C17A35] text-[#F5F0E8] text-xs font-light rounded-lg transition-colors"
                     >
                       <ShoppingCart className="w-3 h-3" /> Add to Cart
                     </button>

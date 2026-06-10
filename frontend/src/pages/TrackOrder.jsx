@@ -39,7 +39,7 @@ export default function TrackOrder() {
           <div className="text-center mb-12">
             <span className="label-luxury text-[#C17A35] block mb-4">Real-time Updates</span>
             <h1 className="font-heading text-[#F5F0E8] text-4xl font-light mb-3">Track Your Order</h1>
-            <p className="text-[#7A8F7C] font-light">Enter your order number to get live delivery status</p>
+            <p className="text-[#9AAA9C] font-light">Enter your order number to get live delivery status</p>
           </div>
 
           <div className="flex gap-3 mb-10">
@@ -49,7 +49,7 @@ export default function TrackOrder() {
               value={orderNumber}
               onChange={(e) => setOrderNumber(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleTrack()}
-              className="flex-1 px-4 py-3 bg-[#162018] border border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] rounded-xl font-light focus:outline-none focus:border-[#2D5A32]"
+              className="flex-1 px-4 py-3 bg-[#162018] border border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] rounded-xl font-light focus:outline-none focus:border-[#2A3A2C]"
             />
             <button
               onClick={handleTrack}
@@ -67,7 +67,7 @@ export default function TrackOrder() {
               animate={{ opacity: 1, y: 0 }}
             >
               {/* Order header */}
-              <div className="bg-[#1E4620] border-b border-[#2D5A32] px-6 py-5">
+              <div className="bg-[#1E4620] border-b border-[#2A3A2C] px-6 py-5">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="label-luxury text-[#9AAA9C] mb-1">Order Number</p>
@@ -100,7 +100,7 @@ export default function TrackOrder() {
                            idx === currentStep ? <Truck className="w-5 h-5" /> :
                            <Clock className="w-5 h-5" />}
                         </div>
-                        <span className="text-[10px] text-center text-[#7A8F7C] max-w-14 leading-tight hidden sm:block font-light">
+                        <span className="text-[10px] text-center text-[#9AAA9C] max-w-14 leading-tight hidden sm:block font-light">
                           {STATUS_LABELS[step]}
                         </span>
                       </div>
@@ -109,10 +109,10 @@ export default function TrackOrder() {
                 </div>
 
                 {order.trackingNumber && (
-                  <div className="bg-[#1E4620]/40 border border-[#2D5A32] rounded-xl p-4 mb-5">
+                  <div className="bg-[#1E4620]/40 border border-[#2A3A2C] rounded-xl p-4 mb-5">
                     <p className="label-luxury text-[#9AAA9C] mb-1">Tracking Number</p>
                     <p className="font-heading text-[#F5F0E8] text-lg font-light">{order.trackingNumber}</p>
-                    {order.shippingCarrier && <p className="text-xs text-[#7A9F7C] mt-1">via {order.shippingCarrier}</p>}
+                    {order.shippingCarrier && <p className="text-xs text-[#9AAA9C] mt-1">via {order.shippingCarrier}</p>}
                   </div>
                 )}
 
@@ -124,7 +124,7 @@ export default function TrackOrder() {
                       <div key={item.id} className="flex justify-between items-center text-sm py-2.5 border-b border-[#2A3A2C]">
                         <div>
                           <p className="text-[#F5F0E8] font-light">{item.productName}</p>
-                          <p className="text-[#7A8F7C] text-xs mt-0.5">Qty: {item.quantity}</p>
+                          <p className="text-[#9AAA9C] text-xs mt-0.5">Qty: {item.quantity}</p>
                         </div>
                         <span className="text-[#C17A35] font-light">₹{item.price * item.quantity}</span>
                       </div>

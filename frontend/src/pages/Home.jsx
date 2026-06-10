@@ -17,16 +17,16 @@ const CATEGORIES = [
 ];
 
 const WHY_US = [
-  { Icon: Award,       title: "Premium Quality",  body: "Sourced from the finest farms across India and worldwide." },
-  { Icon: Truck,       title: "Pan India Delivery",body: "Fast, reliable delivery to every pin code in India." },
-  { Icon: ShieldCheck, title: "100% Natural",      body: "No preservatives, no artificial colors or flavors." },
-  { Icon: RefreshCw,   title: "Easy Returns",      body: "Not satisfied? Return within 7 days, no questions asked." },
+  { Icon: Award,       title: "Premium Quality",   body: "Sourced from the finest farms across India and worldwide." },
+  { Icon: Truck,       title: "Pan India Delivery", body: "Fast, reliable delivery to every pin code in India." },
+  { Icon: ShieldCheck, title: "100% Natural",       body: "No preservatives, no artificial colors or flavors." },
+  { Icon: RefreshCw,   title: "Easy Returns",       body: "Not satisfied? Return within 7 days, no questions asked." },
 ];
 
 const TESTIMONIALS = [
-  { name: "Priya Mehta",   city: "Delhi",   rating: 5, text: "Exceptional quality! The Kashmiri almonds are the best I have ever tasted. Packaging is beautiful too." },
-  { name: "Rajesh Kumar",  city: "Bangalore",rating: 5, text: "Ordered the gift box for Diwali — my family loved it. Fresh, premium, and delivered on time." },
-  { name: "Anita Sharma",  city: "Mumbai",   rating: 5, text: "Been ordering for 2 years. Consistent quality, fair prices. Their dates are absolutely divine." },
+  { name: "Priya Mehta",  city: "Delhi",     rating: 5, text: "Exceptional quality! The Kashmiri almonds are the best I have ever tasted. Packaging is beautiful too." },
+  { name: "Rajesh Kumar", city: "Bangalore", rating: 5, text: "Ordered the gift box for Diwali — my family loved it. Fresh, premium, and delivered on time." },
+  { name: "Anita Sharma", city: "Mumbai",    rating: 5, text: "Been ordering for 2 years. Consistent quality, fair prices. Their dates are absolutely divine." },
 ];
 
 const fadeUp = {
@@ -54,11 +54,8 @@ export default function Home() {
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Deep gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0D1A10] via-[#162018] to-[#0D1A10]" />
-        {/* Subtle radial glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_60%,rgba(30,70,32,0.35),transparent)]" />
-        {/* Decorative grain overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0A1208] via-[#0D1A10] to-[#162018]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_60%,rgba(193,122,53,0.12),transparent)]" />
         <div className="absolute inset-0 opacity-[0.03]"
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }}
         />
@@ -106,7 +103,7 @@ export default function Home() {
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#5A6A5C]">
           <span className="label-luxury text-[10px]">Scroll</span>
           <motion.div
-            className="w-px h-10 bg-gradient-to-b from-[#2A3A2C] to-transparent"
+            className="w-px h-10 bg-gradient-to-b from-[#5A6A5C] to-transparent"
             animate={{ scaleY: [1, 0.5, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
@@ -114,9 +111,9 @@ export default function Home() {
       </section>
 
       {/* ── Trust strip ──────────────────────────────────────────── */}
-      <section className="border-y border-[#2A3A2C]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5">
-          <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-[#7A8F7C] text-xs font-light tracking-widest uppercase">
+      <section className="border-y border-[#2A3A2C] bg-[#162018]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-4">
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-2 text-[#7A8F7C] text-xs font-light tracking-widest uppercase">
             {["Free Delivery above ₹499", "100% Natural & Pure", "Est. 2005 Mumbai", "Pan India Delivery", "20,000+ Happy Customers"].map((t, i) => (
               <span key={t} className="flex items-center gap-3">
                 {i > 0 && <span className="w-1 h-1 rounded-full bg-[#C17A35] opacity-60" />}
@@ -146,10 +143,10 @@ export default function Home() {
               >
                 <Link
                   to={`/products?category=${cat.slug}`}
-                  className="group flex flex-col items-center gap-2.5 p-4 bg-[#162018] border border-[#2A3A2C] rounded-2xl hover:border-[#C17A35]/50 hover:bg-[#1D2B1F] transition-all text-center"
+                  className="group flex flex-col items-center gap-2.5 p-4 bg-[#162018] border border-[#2A3A2C] rounded-2xl hover:border-[#C17A35]/50 hover:shadow-md transition-all text-center"
                 >
                   <span className="text-2xl">{cat.emoji}</span>
-                  <span className="text-xs text-[#9AAA9C] group-hover:text-[#F5F0E8] transition-colors font-light leading-tight">
+                  <span className="text-xs text-[#7A8F7C] group-hover:text-[#F5F0E8] transition-colors font-light leading-tight">
                     {cat.name}
                   </span>
                 </Link>
@@ -160,7 +157,7 @@ export default function Home() {
       </section>
 
       {/* ── Featured Products ─────────────────────────────────────── */}
-      <section className="py-20 px-5 sm:px-8 border-t border-[#2A3A2C]">
+      <section className="py-20 px-5 sm:px-8 border-t border-[#2A3A2C] bg-[#0D1A10]">
         <div className="max-w-7xl mx-auto">
           <motion.div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4" {...fadeUp}>
             <div>
@@ -204,13 +201,13 @@ export default function Home() {
       </section>
 
       {/* ── Gift Boxes Banner ─────────────────────────────────────── */}
-      <section className="py-6 px-5 sm:px-8">
+      <section className="py-6 px-5 sm:px-8 bg-[#0D1A10]">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            className="relative overflow-hidden rounded-3xl bg-[#1E4620] border border-[#2D5A32] px-8 py-16 text-center"
+            className="relative overflow-hidden rounded-3xl bg-[#162018] border border-[#2A3A2C] px-8 py-16 text-center"
             {...fadeUp}
           >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_50%,rgba(193,122,53,0.12),transparent)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_50%,rgba(193,122,53,0.1),transparent)]" />
             <div className="relative z-10">
               <span className="label-luxury text-[#C17A35] block mb-4">Occasion Ready</span>
               <h2 className="font-heading text-[#F5F0E8] text-4xl sm:text-5xl font-light mb-4">
@@ -243,13 +240,13 @@ export default function Home() {
             {WHY_US.map(({ Icon, title, body }, i) => (
               <motion.div
                 key={title}
-                className="text-center p-7 bg-[#162018] border border-[#2A3A2C] rounded-2xl hover:border-[#2D5A32] transition-colors"
+                className="text-center p-7 bg-[#162018] border border-[#2A3A2C] rounded-2xl hover:border-[#C17A35]/40 hover:shadow-md transition-all"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
               >
-                <div className="w-12 h-12 rounded-full border border-[#2A3A2C] flex items-center justify-center mx-auto mb-5">
+                <div className="w-12 h-12 rounded-full border border-[#2A3A2C] bg-[#1D2B1F] flex items-center justify-center mx-auto mb-5">
                   <Icon className="w-5 h-5 text-[#C17A35]" />
                 </div>
                 <h3 className="font-heading text-[#F5F0E8] text-xl font-light mb-2">{title}</h3>
@@ -262,7 +259,7 @@ export default function Home() {
 
       {/* ── Trending ─────────────────────────────────────────────── */}
       {trending?.length > 0 && (
-        <section className="py-20 px-5 sm:px-8 border-t border-[#2A3A2C]">
+        <section className="py-20 px-5 sm:px-8 border-t border-[#2A3A2C] bg-[#162018]">
           <div className="max-w-7xl mx-auto">
             <motion.div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4" {...fadeUp}>
               <div>
@@ -285,7 +282,7 @@ export default function Home() {
       )}
 
       {/* ── Testimonials ─────────────────────────────────────────── */}
-      <section className="py-20 px-5 sm:px-8 border-t border-[#2A3A2C] bg-[#162018]">
+      <section className="py-20 px-5 sm:px-8 border-t border-[#2A3A2C]">
         <div className="max-w-7xl mx-auto">
           <motion.div className="text-center mb-14" {...fadeUp}>
             <span className="label-luxury text-[#C17A35] block mb-3">What Customers Say</span>
@@ -296,7 +293,7 @@ export default function Home() {
             {TESTIMONIALS.map((t, i) => (
               <motion.div
                 key={t.name}
-                className="p-7 bg-[#0D1A10] border border-[#2A3A2C] rounded-2xl"
+                className="p-7 bg-[#162018] border border-[#2A3A2C] rounded-2xl hover:shadow-md transition-all"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -304,7 +301,7 @@ export default function Home() {
               >
                 <div className="flex mb-4">
                   {[1,2,3,4,5].map((n) => (
-                    <Star key={n} className="w-3.5 h-3.5" fill={n <= t.rating ? "#C17A35" : "none"} stroke={n <= t.rating ? "#C17A35" : "#5A6A5C"} />
+                    <Star key={n} className="w-3.5 h-3.5" fill={n <= t.rating ? "#C17A35" : "none"} stroke={n <= t.rating ? "#C17A35" : "#2A3A2C"} />
                   ))}
                 </div>
                 <p className="text-[#9AAA9C] text-sm leading-relaxed font-light italic mb-5">"{t.text}"</p>
@@ -319,13 +316,13 @@ export default function Home() {
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────────── */}
-      <section className="py-24 px-5 sm:px-8 text-center border-t border-[#2A3A2C]">
+      <section className="py-24 px-5 sm:px-8 text-center border-t border-[#2A3A2C] bg-[#162018]">
         <motion.div className="max-w-2xl mx-auto" {...fadeUp}>
           <span className="label-luxury text-[#C17A35] block mb-4">Start Your Journey</span>
           <h2 className="font-heading text-[#F5F0E8] text-4xl sm:text-6xl font-light mb-5">
             Taste the Difference
           </h2>
-          <p className="text-[#7A8F7C] text-lg font-light mb-10">
+          <p className="text-[#9AAA9C] text-lg font-light mb-10">
             Join over 20,000 customers who trust Karun Fruits for their premium dry fruit needs.
           </p>
           <Link

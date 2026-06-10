@@ -35,7 +35,7 @@ export default function Profile() {
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full px-4 py-3 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] rounded-xl font-light focus:outline-none focus:border-[#2D5A32]"
+              className="w-full px-4 py-3 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] rounded-xl font-light focus:outline-none focus:border-[#2A3A2C]"
             />
           </div>
           <div>
@@ -57,7 +57,7 @@ export default function Profile() {
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               maxLength={10}
-              className="w-full px-4 py-3 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] rounded-xl font-light focus:outline-none focus:border-[#2D5A32]"
+              className="w-full px-4 py-3 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] rounded-xl font-light focus:outline-none focus:border-[#2A3A2C]"
             />
           </div>
           <button

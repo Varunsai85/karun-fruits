@@ -44,7 +44,7 @@ export default function Register() {
           placeholder={placeholder}
           value={form[field]}
           onChange={update(field)}
-          className="pl-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2D5A32]"
+          className="pl-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2A3A2C]"
           required
           {...extra}
         />
@@ -62,14 +62,14 @@ export default function Register() {
       >
         <div className="text-center mb-10">
           <Link to="/" className="inline-block mb-6">
-            <span className="label-luxury text-[#7A8F7C] block mb-0.5">Est. 2005 · Mumbai</span>
+            <span className="label-luxury text-[#9AAA9C] block mb-0.5">Est. 2005 · Mumbai</span>
             <span className="font-heading text-[#F5F0E8] text-2xl font-light tracking-widest">
               KARUN <span className="font-medium">FRUITS</span>
             </span>
           </Link>
           <div className="h-px w-16 bg-[#C17A35]/40 mx-auto mb-6" />
           <h1 className="font-heading text-[#F5F0E8] text-3xl font-light">Create Account</h1>
-          <p className="text-[#7A8F7C] text-sm mt-2 font-light">Join thousands of happy customers</p>
+          <p className="text-[#9AAA9C] text-sm mt-2 font-light">Join thousands of happy customers</p>
         </div>
 
         <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-8">
@@ -87,7 +87,7 @@ export default function Register() {
                   placeholder="Minimum 8 characters"
                   value={form.password}
                   onChange={update("password")}
-                  className="pl-10 pr-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2D5A32]"
+                  className="pl-10 pr-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2A3A2C]"
                   required
                 />
                 <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A6A5C] hover:text-[#9AAA9C] transition-colors" onClick={() => setShowPassword(!showPassword)}>
@@ -107,9 +107,9 @@ export default function Register() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-[#7A8F7C]">
+          <div className="mt-6 text-center text-sm text-[#9AAA9C]">
             Already have an account?{" "}
-            <Link to="/login" className="text-[#C17A35] hover:text-[#D4913F] transition-colors">Sign In</Link>
+            <Link to="/login" className="text-[#C17A35] hover:text-[#A86929] transition-colors">Sign In</Link>
           </div>
         </div>
       </motion.div>

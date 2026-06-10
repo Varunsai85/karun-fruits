@@ -54,12 +54,12 @@ export default function ProductCard({ product }) {
               </span>
             )}
             {product.isNew && (
-              <span className="label-luxury bg-[#1E4620] text-[#9ADA9C] border border-[#2D5A32] px-2 py-0.5 rounded-md text-[10px]">
+              <span className="label-luxury bg-[#162018] text-[#F5F0E8] border border-[#2A3A2C] px-2 py-0.5 rounded-md text-[10px]">
                 New
               </span>
             )}
             {product.isBestSeller && (
-              <span className="label-luxury bg-[#0D1A10] text-[#C17A35] border border-[#2A3A2C] px-2 py-0.5 rounded-md text-[10px]">
+              <span className="label-luxury bg-[#1D2B1F] text-[#C17A35] border border-[#2A3A2C] px-2 py-0.5 rounded-md text-[10px]">
                 Bestseller
               </span>
             )}
@@ -68,7 +68,7 @@ export default function ProductCard({ product }) {
           {/* Wishlist */}
           <button
             onClick={handleWishlist}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#0D1A10]/80 border border-[#2A3A2C] flex items-center justify-center text-[#9AAA9C] hover:text-[#C17A35] hover:border-[#C17A35] transition-all"
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#162018]/80 border border-[#2A3A2C] flex items-center justify-center text-[#9AAA9C] hover:text-[#C17A35] hover:border-[#C17A35] transition-all shadow-sm"
           >
             <Heart
               className="w-3.5 h-3.5"
@@ -102,7 +102,7 @@ export default function ProductCard({ product }) {
         {/* Info */}
         <div className="p-4">
           {product.category?.name && (
-            <span className="label-luxury text-[#7A8F7C] block mb-1.5">{product.category.name}</span>
+            <span className="label-luxury text-[#5A6A5C] block mb-1.5">{product.category.name}</span>
           )}
           <h3 className="font-heading text-[#F5F0E8] text-lg font-light leading-tight mb-2 group-hover:text-[#C17A35] transition-colors line-clamp-2">
             {product.name}
@@ -117,7 +117,7 @@ export default function ProductCard({ product }) {
                     key={n}
                     className="w-3 h-3"
                     fill={n <= Math.round(product.avgRating) ? "#C17A35" : "none"}
-                    stroke={n <= Math.round(product.avgRating) ? "#C17A35" : "#5A6A5C"}
+                    stroke={n <= Math.round(product.avgRating) ? "#C17A35" : "#2A3A2C"}
                   />
                 ))}
               </div>

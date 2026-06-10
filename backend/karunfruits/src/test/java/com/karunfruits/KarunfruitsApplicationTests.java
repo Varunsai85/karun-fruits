@@ -1,4 +1,4 @@
-package com.karunfruits.karunfruits;
+package com.karunfruits;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

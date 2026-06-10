@@ -45,7 +45,7 @@ export default function Cart() {
         <motion.div className="text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="text-8xl mb-6">🛒</div>
           <h2 className="font-heading text-[#F5F0E8] text-3xl font-light mb-3">Your cart is empty</h2>
-          <p className="text-[#7A8F7C] mb-8 font-light">Add some premium dry fruits to get started</p>
+          <p className="text-[#9AAA9C] mb-8 font-light">Add some premium dry fruits to get started</p>
           <Link to="/products" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-full transition-colors">
             <ShoppingBag className="w-4 h-4" /> Explore Products
           </Link>
@@ -64,7 +64,7 @@ export default function Cart() {
           </button>
           <div>
             <h1 className="font-heading text-[#F5F0E8] text-3xl font-light">Shopping Cart</h1>
-            <p className="text-[#7A8F7C] text-sm font-light mt-0.5">{items.length} item{items.length !== 1 ? "s" : ""}</p>
+            <p className="text-[#9AAA9C] text-sm font-light mt-0.5">{items.length} item{items.length !== 1 ? "s" : ""}</p>
           </div>
         </div>
 
@@ -98,9 +98,9 @@ export default function Cart() {
                         >
                           {item.product?.name}
                         </Link>
-                        {item.variant && <p className="text-xs text-[#7A8F7C] mt-0.5">{item.variant.name}</p>}
+                        {item.variant && <p className="text-xs text-[#9AAA9C] mt-0.5">{item.variant.name}</p>}
                         {item.product?.weight && (
-                          <p className="text-xs text-[#7A8F7C] mt-0.5">{item.product.weight}{item.product.unit}</p>
+                          <p className="text-xs text-[#9AAA9C] mt-0.5">{item.product.weight}{item.product.unit}</p>
                         )}
                       </div>
                       <button onClick={() => removeItem(item.key)} className="text-[#5A6A5C] hover:text-red-400 transition-colors ml-2">
@@ -127,7 +127,7 @@ export default function Cart() {
               ))}
             </AnimatePresence>
 
-            <Link to="/products" className="inline-flex items-center gap-2 text-sm text-[#7A8F7C] hover:text-[#C17A35] transition-colors font-light mt-2">
+            <Link to="/products" className="inline-flex items-center gap-2 text-sm text-[#9AAA9C] hover:text-[#C17A35] transition-colors font-light mt-2">
               <ArrowLeft className="w-4 h-4" /> Continue Shopping
             </Link>
           </div>
@@ -140,10 +140,10 @@ export default function Cart() {
                 <Tag className="w-4 h-4 text-[#C17A35]" /> Coupon Code
               </h3>
               {coupon ? (
-                <div className="flex items-center justify-between bg-[#1E4620]/40 border border-[#2D5A32] rounded-xl px-4 py-3">
+                <div className="flex items-center justify-between bg-[#1E4620]/40 border border-[#2A3A2C] rounded-xl px-4 py-3">
                   <div>
-                    <p className="text-sm font-medium text-[#9ADA9C]">{coupon}</p>
-                    <p className="text-xs text-[#7A9F7C] mt-0.5">Saved {formatPrice(couponDiscount)}</p>
+                    <p className="text-sm font-medium text-[#C17A35]">{coupon}</p>
+                    <p className="text-xs text-[#9AAA9C] mt-0.5">Saved {formatPrice(couponDiscount)}</p>
                   </div>
                   <button onClick={removeCoupon} className="text-[#5A6A5C] hover:text-red-400 transition-colors">
                     <Trash2 className="w-4 h-4" />
@@ -157,12 +157,12 @@ export default function Cart() {
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                     onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
-                    className="flex-1 px-4 py-2.5 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] rounded-xl text-sm font-light focus:outline-none focus:border-[#2D5A32]"
+                    className="flex-1 px-4 py-2.5 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] rounded-xl text-sm font-light focus:outline-none focus:border-[#2A3A2C]"
                   />
                   <button
                     onClick={handleApplyCoupon}
                     disabled={couponLoading || !couponCode}
-                    className="px-5 py-2.5 bg-[#1E4620] hover:bg-[#2D5A32] disabled:opacity-50 text-[#F5F0E8] text-sm font-light rounded-xl transition-colors"
+                    className="px-5 py-2.5 bg-[#1E4620] hover:bg-[#C17A35] disabled:opacity-50 text-[#F5F0E8] text-sm font-light rounded-xl transition-colors"
                   >
                     Apply
                   </button>
@@ -179,14 +179,14 @@ export default function Cart() {
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 {couponDiscount > 0 && (
-                  <div className="flex justify-between text-[#6DAA6D]">
+                  <div className="flex justify-between text-green-600">
                     <span className="font-light">Coupon Discount</span>
                     <span>-{formatPrice(couponDiscount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-[#9AAA9C]">
                   <span className="font-light">Shipping</span>
-                  <span className={shipping === 0 ? "text-[#6DAA6D] font-medium" : ""}>
+                  <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>
                     {shipping === 0 ? "FREE" : formatPrice(shipping)}
                   </span>
                 </div>

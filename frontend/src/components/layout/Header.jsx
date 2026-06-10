@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ShoppingCart, Heart, User, Menu, X, Phone, ChevronDown, LogOut, Package, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -27,11 +25,11 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
-  const [scrolled,       setScrolled]       = useState(false);
-  const [mobileOpen,     setMobileOpen]     = useState(false);
-  const [searchOpen,     setSearchOpen]     = useState(false);
-  const [searchQuery,    setSearchQuery]    = useState("");
-  const [shopHover,      setShopHover]      = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [mobileOpen,  setMobileOpen]  = useState(false);
+  const [searchOpen,  setSearchOpen]  = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [shopHover,   setShopHover]   = useState(false);
 
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -47,7 +45,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  // On home page the hero is dark — keep header transparent until scrolled
   const transparent = isHome && !scrolled;
 
   const handleSearch = (e) => {
@@ -59,10 +56,15 @@ export default function Header() {
     }
   };
 
+  const textColor  = transparent ? "text-[#F5F0E8]"  : "text-[#F5F0E8]";
+  const mutedColor = transparent ? "text-[#9AAA9C]"   : "text-[#9AAA9C]";
+  const hoverBg    = "hover:bg-[#1E2A1E]";
+  const iconColor  = "text-[#9AAA9C] hover:text-[#F5F0E8]";
+
   return (
     <>
       {/* Top strip */}
-      <div className="bg-[#0D1A10] text-[#9AAA9C] text-[11px] py-2 px-4 hidden md:block border-b border-[#2A3A2C]">
+      <div className="bg-[#0A1208] text-[#7A8F7C] text-[11px] py-2 px-4 hidden md:block border-b border-[#2A3A2C]">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <span className="flex items-center gap-1.5 tracking-wide">
             <Phone className="w-3 h-3" /> 08104956871
@@ -83,7 +85,7 @@ export default function Header() {
           "sticky top-0 z-50 transition-all duration-500",
           transparent
             ? "bg-transparent"
-            : "bg-[#0D1A10]/98 backdrop-blur-md border-b border-[#2A3A2C]"
+            : "bg-[#0D1A10]/98 backdrop-blur-md border-b border-[#2A3A2C] shadow-lg"
         )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -95,11 +97,11 @@ export default function Header() {
             {/* Logo */}
             <Link to="/" className="flex-shrink-0 group">
               <div className="flex flex-col leading-none">
-                <span className="label-luxury text-[#9AAA9C] group-hover:text-[#C17A35] transition-colors">
+                <span className={`label-luxury ${mutedColor} group-hover:text-[#C17A35] transition-colors`}>
                   Est. 2005 · Mumbai
                 </span>
                 <span
-                  className="font-heading text-[#F5F0E8] text-2xl lg:text-3xl font-light tracking-tight mt-0.5"
+                  className={`font-heading ${textColor} text-2xl lg:text-3xl font-light tracking-tight mt-0.5`}
                   style={{ letterSpacing: "0.05em" }}
                 >
                   KARUN <span className="font-medium">FRUITS</span>
@@ -117,13 +119,13 @@ export default function Header() {
                     onMouseEnter={() => setShopHover(true)}
                     onMouseLeave={() => setShopHover(false)}
                   >
-                    <button className="flex items-center gap-1 px-4 py-2 text-sm font-light text-[#D0D8D2] hover:text-[#F5F0E8] tracking-wide transition-colors">
+                    <button className={`flex items-center gap-1 px-4 py-2 text-sm font-light ${textColor} tracking-wide transition-colors ${hoverBg} rounded-lg`}>
                       Shop <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${shopHover ? "rotate-180" : ""}`} />
                     </button>
                     <AnimatePresence>
                       {shopHover && (
                         <motion.div
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[560px] bg-[#0D1A10] border border-[#2A3A2C] rounded-2xl shadow-2xl overflow-hidden"
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[560px] bg-[#162018] border border-[#2A3A2C] rounded-2xl shadow-2xl overflow-hidden"
                           initial={{ opacity: 0, y: 8, scale: 0.97 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 8, scale: 0.97 }}
@@ -155,7 +157,7 @@ export default function Header() {
                               </div>
                             ))}
                           </div>
-                          <div className="border-t border-[#2A3A2C] px-5 py-3 flex justify-between items-center">
+                          <div className="border-t border-[#2A3A2C] px-5 py-3 flex justify-between items-center bg-[#0D1A10]">
                             <span className="text-xs text-[#7A8F7C]">Explore our complete range</span>
                             <Link to="/products" className="text-xs text-[#C17A35] hover:text-[#D4913F] font-medium transition-colors" onClick={() => setShopHover(false)}>
                               View All Products →
@@ -169,7 +171,7 @@ export default function Header() {
                   <Link
                     key={link.to}
                     to={link.to}
-                    className="px-4 py-2 text-sm font-light text-[#D0D8D2] hover:text-[#F5F0E8] tracking-wide transition-colors"
+                    className={`px-4 py-2 text-sm font-light ${textColor} tracking-wide transition-colors ${hoverBg} rounded-lg`}
                   >
                     {link.label}
                   </Link>
@@ -179,18 +181,16 @@ export default function Header() {
 
             {/* Actions */}
             <div className="flex items-center gap-1">
-              {/* Search */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="p-2 text-[#9AAA9C] hover:text-[#F5F0E8] transition-colors rounded-lg hover:bg-[#162018]"
+                className={`p-2 ${iconColor} transition-colors rounded-lg ${hoverBg}`}
               >
                 <Search className="w-4.5 h-4.5" />
               </button>
 
-              {/* Wishlist */}
               <button
                 onClick={() => navigate(isAuthenticated ? "/account/wishlist" : "/login")}
-                className="relative p-2 text-[#9AAA9C] hover:text-[#F5F0E8] transition-colors rounded-lg hover:bg-[#162018]"
+                className={`relative p-2 ${iconColor} transition-colors rounded-lg ${hoverBg}`}
               >
                 <Heart className="w-4.5 h-4.5" />
                 {wishlistCount > 0 && (
@@ -200,10 +200,9 @@ export default function Header() {
                 )}
               </button>
 
-              {/* Cart */}
               <button
                 onClick={() => navigate("/cart")}
-                className="relative p-2 text-[#9AAA9C] hover:text-[#F5F0E8] transition-colors rounded-lg hover:bg-[#162018]"
+                className={`relative p-2 ${iconColor} transition-colors rounded-lg ${hoverBg}`}
               >
                 <ShoppingCart className="w-4.5 h-4.5" />
                 {itemCount > 0 && (
@@ -218,53 +217,51 @@ export default function Header() {
                 )}
               </button>
 
-              {/* User */}
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="ml-1 w-8 h-8 rounded-full bg-[#1E4620] border border-[#2D5A32] flex items-center justify-center text-[#F5F0E8] text-sm font-medium hover:bg-[#2D5A32] transition-colors">
+                    <button className="ml-1 w-8 h-8 rounded-full bg-[#C17A35] border border-[#A86929] flex items-center justify-center text-white text-sm font-medium hover:bg-[#A86929] transition-colors">
                       {user?.name?.[0]?.toUpperCase() || "U"}
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-52 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8]">
+                  <DropdownMenuContent align="end" className="w-52 bg-[#162018] border-[#2A3A2C] text-[#F5F0E8]">
                     <div className="px-3 py-2.5 border-b border-[#2A3A2C]">
-                      <p className="text-sm font-medium">{user?.name}</p>
-                      <p className="text-xs text-[#7A8F7C] mt-0.5">{user?.email}</p>
+                      <p className="text-sm font-medium text-[#F5F0E8]">{user?.name}</p>
+                      <p className="text-xs text-[#9AAA9C] mt-0.5">{user?.email}</p>
                     </div>
-                    <DropdownMenuItem onClick={() => navigate("/account")} className="hover:bg-[#162018] focus:bg-[#162018] text-[#D0D8D2] hover:text-white mt-1">
+                    <DropdownMenuItem onClick={() => navigate("/account")} className="hover:bg-[#1D2B1F] focus:bg-[#1D2B1F] text-[#D0D8D2] mt-1">
                       <User className="w-3.5 h-3.5 mr-2" /> My Account
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/account/orders")} className="hover:bg-[#162018] focus:bg-[#162018] text-[#D0D8D2] hover:text-white">
+                    <DropdownMenuItem onClick={() => navigate("/account/orders")} className="hover:bg-[#1D2B1F] focus:bg-[#1D2B1F] text-[#D0D8D2]">
                       <Package className="w-3.5 h-3.5 mr-2" /> My Orders
                     </DropdownMenuItem>
                     {isAdmin?.() && (
-                      <DropdownMenuItem onClick={() => navigate("/admin")} className="hover:bg-[#162018] focus:bg-[#162018] text-[#D0D8D2] hover:text-white">
+                      <DropdownMenuItem onClick={() => navigate("/admin")} className="hover:bg-[#1D2B1F] focus:bg-[#1D2B1F] text-[#D0D8D2]">
                         <Settings className="w-3.5 h-3.5 mr-2" /> Admin Panel
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator className="bg-[#2A3A2C]" />
-                    <DropdownMenuItem onClick={() => { logout(); navigate("/"); }} className="hover:bg-[#162018] focus:bg-[#162018] text-red-400 hover:text-red-300 mb-1">
+                    <DropdownMenuItem onClick={() => { logout(); navigate("/"); }} className="hover:bg-[#1D2B1F] focus:bg-[#1D2B1F] text-red-400 mb-1">
                       <LogOut className="w-3.5 h-3.5 mr-2" /> Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link to="/login" className="ml-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 border border-[#2A3A2C] text-[#D0D8D2] hover:border-[#C17A35] hover:text-[#F5F0E8] text-sm font-light tracking-wide rounded-full transition-all">
+                <Link to="/login" className="ml-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 border border-[#2A3A2C] text-[#D0D8D2] hover:border-[#C17A35] hover:text-[#C17A35] text-sm font-light tracking-wide rounded-full transition-all">
                   Sign In
                 </Link>
               )}
 
-              {/* Mobile menu */}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden ml-1 p-2 text-[#9AAA9C] hover:text-[#F5F0E8] transition-colors"
+                className={`lg:hidden ml-1 p-2 ${iconColor} transition-colors`}
               >
                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          {/* Search bar slide-down */}
+          {/* Search bar */}
           <AnimatePresence>
             {searchOpen && (
               <motion.div
@@ -280,11 +277,11 @@ export default function Header() {
                     placeholder="Search almonds, cashews, gift boxes..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 bg-[#162018] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#7A8F7C] focus-visible:ring-[#1E4620] focus-visible:border-[#2D5A32]"
+                    className="flex-1 bg-[#162018] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#C17A35] focus-visible:border-[#C17A35]"
                   />
-                  <Button type="submit" className="bg-[#C17A35] hover:bg-[#A86929] text-white px-6 font-light tracking-wide">
+                  <button type="submit" className="px-6 py-2 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-lg transition-colors">
                     Search
-                  </Button>
+                  </button>
                 </form>
               </motion.div>
             )}
@@ -299,20 +296,19 @@ export default function Header() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="lg:hidden overflow-hidden bg-[#0D1A10] border-t border-[#2A3A2C]"
+              className="lg:hidden overflow-hidden bg-[#162018] border-t border-[#2A3A2C] shadow-lg"
             >
               <div className="px-5 py-5 space-y-1">
-                <Link to="/" className="block py-2.5 text-[#D0D8D2] font-light tracking-wide border-b border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>Home</Link>
-                <Link to="/products" className="block py-2.5 text-[#D0D8D2] font-light tracking-wide border-b border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>All Products</Link>
+                <Link to="/" className="block py-2.5 text-[#F5F0E8] font-light tracking-wide border-b border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>Home</Link>
+                <Link to="/products" className="block py-2.5 text-[#F5F0E8] font-light tracking-wide border-b border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>All Products</Link>
                 {CATEGORIES.map((cat) => (
-                  <Link key={cat.slug} to={`/products?category=${cat.slug}`} className="block py-2 pl-3 text-sm text-[#7A8F7C] hover:text-[#D0D8D2] transition-colors" onClick={() => setMobileOpen(false)}>
+                  <Link key={cat.slug} to={`/products?category=${cat.slug}`} className="block py-2 pl-3 text-sm text-[#9AAA9C] hover:text-[#F5F0E8] transition-colors" onClick={() => setMobileOpen(false)}>
                     {cat.name}
                   </Link>
                 ))}
-                <Link to="/about" className="block py-2.5 text-[#D0D8D2] font-light tracking-wide border-t border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>About</Link>
+                <Link to="/about" className="block py-2.5 text-[#F5F0E8] font-light tracking-wide border-t border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>About</Link>
                 <div className="pt-3">
-                  <a href="https://wa.me/918104956871" target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-2 text-sm text-[#C17A35] hover:text-[#D4913F]">
+                  <a href="https://wa.me/918104956871" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-[#C17A35] hover:text-[#D4913F]">
                     WhatsApp: 08104956871
                   </a>
                 </div>

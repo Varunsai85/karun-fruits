@@ -24,14 +24,14 @@ export default function AccountLayout() {
           <aside className="lg:col-span-1">
             <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl overflow-hidden sticky top-24">
               {/* Profile header */}
-              <div className="bg-[#1E4620] border-b border-[#2D5A32] p-6">
-                <div className="w-14 h-14 rounded-full bg-[#0D1A10] border border-[#2D5A32] flex items-center justify-center text-2xl font-light text-[#F5F0E8] font-heading mb-3">
+              <div className="bg-[#1E4620] border-b border-[#2A3A2C] p-6">
+                <div className="w-14 h-14 rounded-full bg-[#0D1A10] border border-[#2A3A2C] flex items-center justify-center text-2xl font-light text-[#F5F0E8] font-heading mb-3">
                   {user?.name?.[0]?.toUpperCase()}
                 </div>
                 <p className="font-heading text-[#F5F0E8] text-lg font-light leading-tight">{user?.name}</p>
                 <p className="text-[#9AAA9C] text-sm mt-0.5 font-light">{user?.email}</p>
                 {user?.loyaltyPoints > 0 && (
-                  <div className="mt-3 bg-[#0D1A10]/40 border border-[#2D5A32] rounded-lg px-3 py-1.5 inline-block">
+                  <div className="mt-3 bg-[#0D1A10]/40 border border-[#2A3A2C] rounded-lg px-3 py-1.5 inline-block">
                     <p className="text-xs text-[#9AAA9C]">Loyalty Points</p>
                     <p className="text-[#C17A35] font-medium text-sm">{user.loyaltyPoints} pts</p>
                   </div>
@@ -44,7 +44,7 @@ export default function AccountLayout() {
                   <NavLink key={to} to={to} end={end}
                     className={({ isActive }) => `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-light transition-all mb-0.5 ${
                       isActive
-                        ? "bg-[#1E4620] text-[#F5F0E8] border border-[#2D5A32]"
+                        ? "bg-[#1E4620] text-[#F5F0E8] border border-[#2A3A2C]"
                         : "text-[#9AAA9C] hover:bg-[#1D2B1F] hover:text-[#F5F0E8]"
                     }`}>
                     <Icon className="w-4 h-4" />

@@ -46,14 +46,14 @@ export default function Login() {
         {/* Header */}
         <div className="text-center mb-10">
           <Link to="/" className="inline-block mb-6">
-            <span className="label-luxury text-[#7A8F7C] block mb-0.5">Est. 2005 · Mumbai</span>
+            <span className="label-luxury text-[#9AAA9C] block mb-0.5">Est. 2005 · Mumbai</span>
             <span className="font-heading text-[#F5F0E8] text-2xl font-light tracking-widest">
               KARUN <span className="font-medium">FRUITS</span>
             </span>
           </Link>
           <div className="h-px w-16 bg-[#C17A35]/40 mx-auto mb-6" />
           <h1 className="font-heading text-[#F5F0E8] text-3xl font-light">Welcome Back</h1>
-          <p className="text-[#7A8F7C] text-sm mt-2 font-light">Sign in to your account</p>
+          <p className="text-[#9AAA9C] text-sm mt-2 font-light">Sign in to your account</p>
         </div>
 
         <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-8">
@@ -67,7 +67,7 @@ export default function Login() {
                   placeholder="you@example.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="pl-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2D5A32]"
+                  className="pl-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2A3A2C]"
                   required
                 />
               </div>
@@ -76,7 +76,7 @@ export default function Login() {
             <div>
               <div className="flex items-center justify-between">
                 <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">Password</Label>
-                <Link to="/forgot-password" className="text-xs text-[#C17A35] hover:text-[#D4913F] transition-colors">
+                <Link to="/forgot-password" className="text-xs text-[#C17A35] hover:text-[#A86929] transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -87,7 +87,7 @@ export default function Login() {
                   placeholder="Enter your password"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="pl-10 pr-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2D5A32]"
+                  className="pl-10 pr-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2A3A2C]"
                   required
                 />
                 <button
@@ -109,9 +109,9 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-[#7A8F7C]">
+          <div className="mt-6 text-center text-sm text-[#9AAA9C]">
             Don't have an account?{" "}
-            <Link to="/register" className="text-[#C17A35] hover:text-[#D4913F] transition-colors">
+            <Link to="/register" className="text-[#C17A35] hover:text-[#A86929] transition-colors">
               Create Account
             </Link>
           </div>

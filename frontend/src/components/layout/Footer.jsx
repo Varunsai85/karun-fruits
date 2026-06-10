@@ -42,11 +42,11 @@ const WhatsAppIcon = () => (
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0D1A10] text-[#9AAA9C]">
+    <footer className="bg-[#0A1208] text-[#7A8F7C]">
       <div className="h-px bg-gradient-to-r from-transparent via-[#2A3A2C] to-transparent" />
 
       {/* Trust badges */}
-      <div className="border-b border-[#2A3A2C]">
+      <div className="border-b border-[#1E2A1E]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
@@ -65,14 +65,14 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main footer grid */}
+      {/* Main grid */}
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-5">
-              <span className="label-luxury text-[#7A8F7C] block mb-1">Est. 2005 · Mumbai</span>
+              <span className="label-luxury text-[#5A6A5C] block mb-1">Est. 2005 · Mumbai</span>
               <span className="font-heading text-[#F5F0E8] text-2xl font-light tracking-widest block">
                 KARUN <span className="font-medium">FRUITS</span>
               </span>
@@ -156,16 +156,16 @@ export default function Footer() {
               </li>
             </ul>
             <div className="mt-6 p-4 border border-[#2A3A2C] rounded-xl">
-              <p className="label-luxury text-[#7A8F7C] mb-1">Store Hours</p>
-              <p className="text-sm text-[#9AAA9C]">Mon – Sat: 9:00 AM – 8:00 PM</p>
-              <p className="text-sm text-[#9AAA9C]">Sunday: 10:00 AM – 6:00 PM</p>
+              <p className="label-luxury text-[#5A6A5C] mb-1">Store Hours</p>
+              <p className="text-sm text-[#7A8F7C]">Mon – Sat: 9:00 AM – 8:00 PM</p>
+              <p className="text-sm text-[#7A8F7C]">Sunday: 10:00 AM – 6:00 PM</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[#2A3A2C]">
+      <div className="border-t border-[#1E2A1E]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-[#5A6A5C]">
           <span>© {new Date().getFullYear()} Karun Fruits. All rights reserved.</span>
           <div className="flex gap-4">

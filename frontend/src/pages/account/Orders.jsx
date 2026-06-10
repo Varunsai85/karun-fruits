@@ -12,9 +12,9 @@ const STATUS_STYLES = {
   PACKED:          "bg-[#2a2a1a] text-[#C17A35] border border-[#3a3a2a]",
   SHIPPED:         "bg-[#2a1a1a] text-[#d87a5a] border border-[#4a2a2a]",
   OUT_FOR_DELIVERY:"bg-[#2a1a3a] text-[#a87ad8] border border-[#3a2a4a]",
-  DELIVERED:       "bg-[#1a2a1a] text-[#6DAA6D] border border-[#2a4a2a]",
+  DELIVERED:       "bg-[#1a2a1a] text-green-600 border border-[#2a4a2a]",
   CANCELLED:       "bg-[#2a1a1a] text-red-400 border border-[#4a2a2a]",
-  REFUNDED:        "bg-[#1a1a1a] text-[#7A8F7C] border border-[#2a2a2a]",
+  REFUNDED:        "bg-[#1a1a1a] text-[#9AAA9C] border border-[#2a2a2a]",
 };
 const STATUS_LABELS = {
   ORDER_PLACED: "Order Placed", CONFIRMED: "Confirmed", PACKED: "Packed",
@@ -52,7 +52,7 @@ export default function Orders() {
               placeholder="Search orders..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] rounded-xl text-sm font-light focus:outline-none focus:border-[#2D5A32] w-52"
+              className="pl-9 pr-4 py-2 bg-[#0D1A10] border border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] rounded-xl text-sm font-light focus:outline-none focus:border-[#2A3A2C] w-52"
             />
           </div>
         </div>
@@ -63,9 +63,9 @@ export default function Orders() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <Package className="w-14 h-14 text-[#2A3A2C] mx-auto mb-4" />
+            <Package className="w-14 h-14 text-[#5A6A5C] mx-auto mb-4" />
             <h3 className="font-heading text-[#F5F0E8] text-xl font-light mb-2">No orders yet</h3>
-            <p className="text-[#7A8F7C] mb-6 font-light">Your orders will appear here after you shop</p>
+            <p className="text-[#9AAA9C] mb-6 font-light">Your orders will appear here after you shop</p>
             <Link to="/products" className="inline-flex items-center gap-2 px-7 py-3 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-full transition-colors">
               Start Shopping
             </Link>
@@ -77,7 +77,7 @@ export default function Orders() {
                 <div className="flex items-start justify-between mb-2.5">
                   <div>
                     <p className="text-[#F5F0E8] font-light text-sm">{order.orderNumber}</p>
-                    <p className="text-xs text-[#7A8F7C] mt-0.5 font-light">Placed on {formatDate(order.createdAt)}</p>
+                    <p className="text-xs text-[#9AAA9C] mt-0.5 font-light">Placed on {formatDate(order.createdAt)}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`text-[10px] font-light px-2.5 py-1 rounded-full ${STATUS_STYLES[order.status] || ""}`}>
@@ -89,7 +89,7 @@ export default function Orders() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#7A8F7C] font-light truncate max-w-[60%]">
+                  <span className="text-xs text-[#9AAA9C] font-light truncate max-w-[60%]">
                     {order.items?.map((i) => `${i.productName} × ${i.quantity}`).join(", ")}
                   </span>
                   <span className="font-heading text-[#C17A35] text-lg font-light">{formatPrice(order.total)}</span>

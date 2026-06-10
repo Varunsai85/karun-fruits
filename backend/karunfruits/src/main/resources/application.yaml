@@ -28,16 +28,21 @@ spring:
           auth: true
           starttls:
             enable: true
+            required: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    default-property-inclusion: non_null
 
 server:
   port: 8080
   servlet:
-    context-path: /
+    context-path: /api
 
 jwt:
-  # Generate with: openssl rand -base64 64
-  secret: ${JWT_SECRET:dGhpcyBpcyBhIHZlcnkgbG9uZyBzZWNyZXQga2V5IGZvciBqd3QgdG9rZW4gc2lnbmluZw==}
-  expiration: 86400000  # 24 hours in milliseconds
+  secret: ${JWT_SECRET:KarunFruitsSecretKeyForJWTTokenGenerationAndValidation2024VeryLongSecret}
+  expiration: 86400000
 
 razorpay:
   key:
@@ -49,7 +54,12 @@ twilio:
   auth-token: ${TWILIO_AUTH_TOKEN:}
   phone-number: ${TWILIO_PHONE_NUMBER:}
 
+shiprocket:
+  email: ${SHIPROCKET_EMAIL:}
+  password: ${SHIPROCKET_PASSWORD:}
+
 logging:
   level:
-    com.karunfruits: INFO
-    org.springframework.security: WARN
+    com.karunfruits: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG

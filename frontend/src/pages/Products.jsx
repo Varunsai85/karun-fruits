@@ -90,7 +90,7 @@ export default function Products() {
               <Checkbox
                 checked={selectedCategories.includes(cat.id)}
                 onCheckedChange={() => toggleCategory(cat.id)}
-                className="border-[#2A3A2C] data-[state=checked]:bg-[#1E4620] data-[state=checked]:border-[#1E4620]"
+                className="border-[#2A3A2C] data-[state=checked]:bg-[#1E4620] data-[state=checked]:border-[#C17A35]"
               />
               <span className="text-sm text-[#9AAA9C] group-hover:text-[#F5F0E8] transition-colors font-light">{cat.label}</span>
             </label>
@@ -102,7 +102,7 @@ export default function Products() {
         <h3 className="label-luxury text-[#C17A35] mb-4">
           Price Range
         </h3>
-        <p className="text-sm text-[#7A8F7C] mb-4 font-light">₹{priceRange[0]} – ₹{priceRange[1]}</p>
+        <p className="text-sm text-[#9AAA9C] mb-4 font-light">₹{priceRange[0]} – ₹{priceRange[1]}</p>
         <Slider
           value={priceRange}
           onValueChange={setPriceRange}
@@ -114,7 +114,7 @@ export default function Products() {
       <div className="border-t border-[#2A3A2C] pt-6">
         <h3 className="label-luxury text-[#C17A35] mb-4">Availability</h3>
         <label className="flex items-center gap-2.5 cursor-pointer">
-          <Checkbox className="border-[#2A3A2C] data-[state=checked]:bg-[#1E4620] data-[state=checked]:border-[#1E4620]" />
+          <Checkbox className="border-[#2A3A2C] data-[state=checked]:bg-[#1E4620] data-[state=checked]:border-[#C17A35]" />
           <span className="text-sm text-[#9AAA9C] font-light">In Stock Only</span>
         </label>
       </div>
@@ -133,10 +133,10 @@ export default function Products() {
         <div className="mb-8">
           {searchQuery && (
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-sm text-[#7A8F7C] font-light">Search results for:</span>
+              <span className="text-sm text-[#9AAA9C] font-light">Search results for:</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#162018] border border-[#2A3A2C] text-[#F5F0E8] text-sm rounded-full">
                 {searchQuery}
-                <button onClick={() => setSearchParams({})} className="text-[#7A8F7C] hover:text-[#C17A35]"><X className="w-3 h-3" /></button>
+                <button onClick={() => setSearchParams({})} className="text-[#9AAA9C] hover:text-[#C17A35]"><X className="w-3 h-3" /></button>
               </span>
             </div>
           )}
@@ -149,7 +149,7 @@ export default function Products() {
                 {categoryParam ? CATEGORIES.find(c => c.id === categoryParam)?.label || "Products" : "Our Collection"}
               </h1>
             </div>
-            <span className="text-sm text-[#7A8F7C] font-light">{data?.totalElements || products.length} products</span>
+            <span className="text-sm text-[#9AAA9C] font-light">{data?.totalElements || products.length} products</span>
           </div>
         </div>
 
@@ -197,10 +197,10 @@ export default function Products() {
                   </SelectContent>
                 </Select>
                 <div className="hidden sm:flex border border-[#2A3A2C] rounded-lg overflow-hidden">
-                  <button className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#1E4620] text-[#F5F0E8]" : "text-[#7A8F7C] hover:text-[#9AAA9C]"}`} onClick={() => setViewMode("grid")}>
+                  <button className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#1E4620] text-[#F5F0E8]" : "text-[#9AAA9C] hover:text-[#9AAA9C]"}`} onClick={() => setViewMode("grid")}>
                     <Grid2X2 className="w-4 h-4" />
                   </button>
-                  <button className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#1E4620] text-[#F5F0E8]" : "text-[#7A8F7C] hover:text-[#9AAA9C]"}`} onClick={() => setViewMode("list")}>
+                  <button className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#1E4620] text-[#F5F0E8]" : "text-[#9AAA9C] hover:text-[#9AAA9C]"}`} onClick={() => setViewMode("list")}>
                     <List className="w-4 h-4" />
                   </button>
                 </div>
@@ -211,9 +211,9 @@ export default function Products() {
             {selectedCategories.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-5">
                 {selectedCategories.map((cat) => (
-                  <span key={cat} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E4620] border border-[#2D5A32] text-[#9ADA9C] text-sm rounded-full font-light">
+                  <span key={cat} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E4620] border border-[#2A3A2C] text-[#C17A35] text-sm rounded-full font-light">
                     {CATEGORIES.find(c => c.id === cat)?.label}
-                    <button onClick={() => toggleCategory(cat)} className="text-[#7A9F7C] hover:text-[#F5F0E8]"><X className="w-3 h-3" /></button>
+                    <button onClick={() => toggleCategory(cat)} className="text-[#9AAA9C] hover:text-[#F5F0E8]"><X className="w-3 h-3" /></button>
                   </span>
                 ))}
               </div>
@@ -237,7 +237,7 @@ export default function Products() {
               <div className="text-center py-20">
                 <div className="text-6xl mb-5">🔍</div>
                 <h3 className="font-heading text-[#F5F0E8] text-2xl font-light mb-2">No products found</h3>
-                <p className="text-[#7A8F7C] mb-7 font-light">Try adjusting your filters or search terms</p>
+                <p className="text-[#9AAA9C] mb-7 font-light">Try adjusting your filters or search terms</p>
                 <button onClick={clearFilters} className="px-8 py-3 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-full transition-colors">
                   Clear Filters
                 </button>
