@@ -15,5 +15,6 @@ public class AuthResponse {
         private String phone;
         private String role;
         private int loyaltyPoints;
+        private String referralCode;
     }
 }

@@ -1,5 +1,6 @@
 package com.karunfruits.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,6 +39,7 @@ public class Address {
     @Builder.Default
     private AddressType type = AddressType.HOME;
 
+    @JsonProperty("isDefault")
     @Builder.Default
     private boolean isDefault = false;
 

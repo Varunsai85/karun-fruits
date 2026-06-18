@@ -38,9 +38,17 @@ public class AuthService {
                 .phone(req.getPhone())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .referralCode(generateReferralCode(req.getName()))
+                .referredBy(req.getReferralCode())
                 .build();
 
         userRepository.save(user);
+
+        if (req.getReferralCode() != null && !req.getReferralCode().isBlank()) {
+            userRepository.findByReferralCode(req.getReferralCode()).ifPresent(referrer -> {
+                referrer.setLoyaltyPoints(referrer.getLoyaltyPoints() + 50);
+                userRepository.save(referrer);
+            });
+        }
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
         return buildAuthResponse(user, token);
     }
@@ -73,6 +81,7 @@ public class AuthService {
                         .phone(user.getPhone())
                         .role(user.getRole().name())
                         .loyaltyPoints(user.getLoyaltyPoints())
+                        .referralCode(user.getReferralCode())
                         .build())
                 .build();
     }

@@ -44,6 +44,8 @@ public class User {
 
     private String referralCode;
 
+    private String referredBy;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

@@ -30,33 +30,33 @@ public class OrderService {
         BigDecimal subtotal = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
 
-        for (CreateOrderRequest.Item item : req.getItems()) {
-            Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + item.getProductId()));
+        for (CreateOrderRequest.Item item : req.items()) {
+            Product product = productRepository.findById(item.productId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + item.productId()));
 
-            if (product.getStock() < item.getQuantity()) {
+            if (product.getStock() < item.quantity()) {
                 throw new BadRequestException("Insufficient stock for: " + product.getName());
             }
 
             BigDecimal price = product.getSalePrice() != null ? product.getSalePrice() : product.getPrice();
-            subtotal = subtotal.add(price.multiply(BigDecimal.valueOf(item.getQuantity())));
+            subtotal = subtotal.add(price.multiply(BigDecimal.valueOf(item.quantity())));
 
             OrderItem orderItem = OrderItem.builder()
                     .product(product)
                     .productName(product.getName())
                     .productImage(product.getImages().isEmpty() ? null : product.getImages().get(0).getUrl())
-                    .quantity(item.getQuantity())
+                    .quantity(item.quantity())
                     .price(price)
                     .build();
             orderItems.add(orderItem);
 
-            product.setStock(product.getStock() - item.getQuantity());
+            product.setStock(product.getStock() - item.quantity());
             productRepository.save(product);
         }
 
         BigDecimal discount = BigDecimal.ZERO;
-        if (req.getCouponCode() != null) {
-            Coupon coupon = couponRepository.findByCodeAndActiveTrue(req.getCouponCode())
+        if (req.couponCode() != null) {
+            Coupon coupon = couponRepository.findByCodeAndActiveTrue(req.couponCode())
                     .orElseThrow(() -> new BadRequestException("Invalid coupon code"));
             discount = calculateDiscount(coupon, subtotal);
             coupon.setUsedCount(coupon.getUsedCount() + 1);
@@ -75,15 +75,15 @@ public class OrderService {
                 .discount(discount)
                 .shippingCharge(shippingCharge)
                 .total(total)
-                .couponCode(req.getCouponCode())
-                .paymentMethod(Order.PaymentMethod.valueOf(req.getPaymentMethod()))
-                .addressName(req.getAddress().getName())
-                .addressLine1(req.getAddress().getLine1())
-                .addressLine2(req.getAddress().getLine2())
-                .addressCity(req.getAddress().getCity())
-                .addressState(req.getAddress().getState())
-                .addressPincode(req.getAddress().getPincode())
-                .addressPhone(req.getAddress().getPhone())
+                .couponCode(req.couponCode())
+                .paymentMethod(Order.PaymentMethod.valueOf(req.paymentMethod()))
+                .addressName(req.address().name())
+                .addressLine1(req.address().line1())
+                .addressLine2(req.address().line2())
+                .addressCity(req.address().city())
+                .addressState(req.address().state())
+                .addressPincode(req.address().pincode())
+                .addressPhone(req.address().phone())
                 .build();
 
         Order saved = orderRepository.save(order);
@@ -91,7 +91,16 @@ public class OrderService {
             item.setOrder(saved);
         }
         saved.getItems().addAll(orderItems);
-        return orderRepository.save(saved);
+        Order finalOrder = orderRepository.save(saved);
+
+        // Award 1 loyalty point per ₹10 spent (rounded down)
+        int pointsEarned = total.intValue() / 10;
+        if (pointsEarned > 0) {
+            user.setLoyaltyPoints(user.getLoyaltyPoints() + pointsEarned);
+            userRepository.save(user);
+        }
+
+        return finalOrder;
     }
 
     public Page<Order> getUserOrders(Long userId, int page, int size) {

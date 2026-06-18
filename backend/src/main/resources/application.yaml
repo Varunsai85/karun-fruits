@@ -3,7 +3,7 @@ spring:
     name: karunfruits
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/karunfruits
+    url: jdbc:postgresql://ep-sparkling-mountain-aojg1390-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
