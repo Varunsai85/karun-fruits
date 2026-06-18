@@ -6,6 +6,7 @@ import lombok.*;
 public class AuthResponse {
     private String token;
     private UserDto user;
+    private String message;
 
     @Data @Builder @NoArgsConstructor @AllArgsConstructor
     public static class UserDto {

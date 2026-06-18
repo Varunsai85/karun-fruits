@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { lazy, Suspense } from "react";
 import Layout from "@/components/layout/Layout";
 import { useAuthStore } from "@/store/authStore";
@@ -12,6 +13,9 @@ const Cart = lazy(() => import("@/pages/Cart"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
 const Login = lazy(() => import("@/pages/auth/Login"));
 const Register = lazy(() => import("@/pages/auth/Register"));
+const ForgotPassword = lazy(() => import("@/pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/pages/auth/ResetPassword"));
+const VerifyEmail = lazy(() => import("@/pages/auth/VerifyEmail"));
 const TrackOrder = lazy(() => import("@/pages/TrackOrder"));
 const AccountLayout = lazy(() => import("@/pages/account/AccountLayout"));
 const Profile = lazy(() => import("@/pages/account/Profile"));

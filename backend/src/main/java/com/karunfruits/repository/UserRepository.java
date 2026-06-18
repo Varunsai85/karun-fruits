@@ -12,4 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhone(String phone);
     java.util.Optional<User> findByReferralCode(String referralCode);
     long countByReferredBy(String referredBy);
+    Optional<User> findByVerificationToken(String verificationToken);
+    Optional<User> findByPasswordResetToken(String passwordResetToken);
+    Optional<User> findByGoogleId(String googleId);
 }

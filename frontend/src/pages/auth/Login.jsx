@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/services/authService";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
+import GoogleSignInButton from "@/components/common/GoogleSignInButton";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,25 +18,49 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState(null);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password) { toast.error("Please fill in all fields"); return; }
+    if (!form.email || !form.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
     setLoading(true);
+    setUnverifiedEmail(null);
     try {
       const res = await authService.login(form);
-      login(res.user, res.token);
-      toast.success(`Welcome back, ${res.user.name}!`);
+      login(res.data.user, res.data.token);
+      toast.success(`Welcome back, ${res.data.user.name}!`);
       navigate(redirect);
     } catch (err) {
-      toast.error(err?.message || "Invalid email or password");
+      const msg = err?.response?.data?.message || err?.message || "";
+      if (msg === "EMAIL_NOT_VERIFIED") {
+        setUnverifiedEmail(form.email);
+      } else {
+        toast.error(msg || "Invalid email or password");
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  const handleResendVerification = async () => {
+    if (!unverifiedEmail) return;
+    setResendLoading(true);
+    try {
+      await authService.resendVerification(unverifiedEmail);
+      toast.success("Verification email sent! Please check your inbox.");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to resend email");
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-[80vh] bg-[#0D1A10] flex items-center justify-center px-4 py-16">
+    <div className="flex-1 bg-[#0D1A10] flex items-center justify-center px-4 py-12">
       <motion.div
         className="w-full max-w-md"
         initial={{ opacity: 0, y: 24 }}
@@ -45,18 +69,37 @@ export default function Login() {
       >
         {/* Header */}
         <div className="text-center mb-10">
-          <Link to="/" className="inline-block mb-6">
-            <span className="label-luxury text-[#9AAA9C] block mb-0.5">Est. 2005 · Mumbai</span>
-            <span className="font-heading text-[#F5F0E8] text-2xl font-light tracking-widest">
-              KARUN <span className="font-medium">FRUITS</span>
-            </span>
-          </Link>
-          <div className="h-px w-16 bg-[#C17A35]/40 mx-auto mb-6" />
           <h1 className="font-heading text-[#F5F0E8] text-3xl font-light">Welcome Back</h1>
           <p className="text-[#9AAA9C] text-sm mt-2 font-light">Sign in to your account</p>
         </div>
 
         <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-8">
+          {/* Email not verified banner */}
+          {unverifiedEmail && (
+            <div className="mb-5 p-4 bg-amber-900/30 border border-amber-700/50 rounded-xl text-sm">
+              <p className="text-amber-300 font-medium mb-1">Email not verified</p>
+              <p className="text-amber-200/80 text-xs mb-3">
+                Please check your inbox for the verification link sent to{" "}
+                <span className="font-medium">{unverifiedEmail}</span>.
+              </p>
+              <button
+                onClick={handleResendVerification}
+                disabled={resendLoading}
+                className="text-xs text-amber-300 hover:text-amber-200 underline underline-offset-2 disabled:opacity-50 transition-colors"
+              >
+                {resendLoading ? "Sending..." : "Resend verification email"}
+              </button>
+            </div>
+          )}
+
+          {/* Google Sign-In */}
+          <GoogleSignInButton onSuccess={({ user, token }) => { login(user, token); toast.success(`Welcome, ${user.name}!`); navigate(redirect); }} />
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-[#2A3A2C]" />
+            <span className="text-[#5A6A5C] text-xs font-light tracking-wide">OR</span>
+            <div className="flex-1 h-px bg-[#2A3A2C]" />
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">Email Address</Label>
@@ -76,7 +119,10 @@ export default function Login() {
             <div>
               <div className="flex items-center justify-between">
                 <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">Password</Label>
-                <Link to="/forgot-password" className="text-xs text-[#C17A35] hover:text-[#A86929] transition-colors">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-[#C17A35] hover:text-[#A86929] transition-colors"
+                >
                   Forgot password?
                 </Link>
               </div>

@@ -5,10 +5,11 @@ export const authService = {
   register: (data) => api.post("/auth/register", data),
   logout: () => api.post("/auth/logout"),
   me: () => api.get("/auth/me"),
-  refreshToken: () => api.post("/auth/refresh"),
-  sendOtp: (phone) => api.post("/auth/send-otp", { phone }),
-  verifyOtp: (phone, otp) => api.post("/auth/verify-otp", { phone, otp }),
   forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
-  resetPassword: (token, password) =>
-    api.post("/auth/reset-password", { token, password }),
+  resetPassword: (token, newPassword) =>
+    api.post("/auth/reset-password", { token, newPassword }),
+  verifyEmail: (token) => api.get(`/auth/verify-email?token=${token}`),
+  resendVerification: (email) =>
+    api.post("/auth/resend-verification", { email }),
+  googleLogin: (idToken) => api.post("/auth/google", { idToken }),
 };

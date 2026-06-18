@@ -46,6 +46,15 @@ public class User {
 
     private String referredBy;
 
+    @Column(unique = true)
+    private String googleId;
+
+    private String verificationToken;
+
+    private String passwordResetToken;
+
+    private LocalDateTime passwordResetTokenExpiry;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
