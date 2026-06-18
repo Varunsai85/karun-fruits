@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, MapPin, CreditCard, Package, Check, Plus } from "lucide-react";
+import { ChevronRight, MapPin, CreditCard, Package, Check } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { orderService } from "@/services/orderService";
+import { userService } from "@/services/userService";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -44,6 +46,24 @@ export default function Checkout() {
 
   const { items, getSubtotal, getTotal, coupon, couponDiscount, clearCart } = useCartStore();
   const { user } = useAuthStore();
+
+  const { data: savedAddresses = [] } = useQuery({
+    queryKey: ["addresses"],
+    queryFn: () => userService.getAddresses().then(r => r.data),
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const prefillAddress = (saved) => {
+    setAddress({
+      name: saved.name || user?.name || "",
+      line1: saved.line1 || "",
+      line2: saved.line2 || "",
+      city: saved.city || "",
+      state: saved.state || "",
+      pincode: saved.pincode || "",
+      phone: saved.phone || user?.phone || "",
+    });
+  };
 
   const subtotal = getSubtotal();
   const shipping = subtotal >= 499 ? 0 : 50;
@@ -200,6 +220,39 @@ export default function Checkout() {
                   <h2 className="text-lg font-bold text-[#3D2000] mb-5 flex items-center gap-2">
                     <MapPin className="w-5 h-5 text-[#C8860A]" /> Delivery Address
                   </h2>
+
+                  {/* Saved addresses picker */}
+                  {savedAddresses.length > 0 && (
+                    <div className="mb-5">
+                      <p className="text-sm text-[#8B6914] font-medium mb-3">Saved Addresses</p>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        {savedAddresses.map((a) => (
+                          <button
+                            key={a.id}
+                            type="button"
+                            onClick={() => prefillAddress(a)}
+                            className="text-left p-3 rounded-xl border border-[#E8D5B5] hover:border-[#C8860A] hover:bg-[#FFF8F0] transition-all text-sm"
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-medium text-[#3D2000]">{a.name}</span>
+                              {a.isDefault && (
+                                <span className="text-xs bg-[#C8860A]/10 text-[#C8860A] px-1.5 py-0.5 rounded-md">Default</span>
+                              )}
+                            </div>
+                            <p className="text-[#8B6914] text-xs leading-relaxed line-clamp-2">
+                              {a.line1}{a.line2 ? `, ${a.line2}` : ""}, {a.city}, {a.state} – {a.pincode}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-3 my-4">
+                        <div className="flex-1 h-px bg-[#E8D5B5]" />
+                        <span className="text-[#8B6914] text-xs">or fill manually</span>
+                        <div className="flex-1 h-px bg-[#E8D5B5]" />
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="sm:col-span-2">
                       <Label className="text-[#3D2000]">Full Name *</Label>
