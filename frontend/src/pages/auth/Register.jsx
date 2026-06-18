@@ -9,6 +9,25 @@ import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
 import GoogleSignInButton from "@/components/common/GoogleSignInButton";
 
+function Field({ label, icon: Icon, type = "text", value, onChange, placeholder, required = true }) {
+  return (
+    <div>
+      <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">{label}</Label>
+      <div className="relative mt-2">
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5A6A5C]" />
+        <Input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="pl-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2A3A2C]"
+          required={required}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Register() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -39,23 +58,6 @@ export default function Register() {
       setLoading(false);
     }
   };
-
-  const Field = ({ label, icon: Icon, type = "text", field, placeholder }) => (
-    <div>
-      <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">{label}</Label>
-      <div className="relative mt-2">
-        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5A6A5C]" />
-        <Input
-          type={type}
-          placeholder={placeholder}
-          value={form[field]}
-          onChange={update(field)}
-          className="pl-10 bg-[#0D1A10] border-[#2A3A2C] text-[#F5F0E8] placeholder:text-[#5A6A5C] focus-visible:ring-[#1E4620] focus-visible:border-[#2A3A2C]"
-          required
-        />
-      </div>
-    </div>
-  );
 
   return (
     <div className="flex-1 bg-[#0D1A10] flex items-center justify-center px-4 py-12">
@@ -111,9 +113,9 @@ export default function Register() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <Field label="Full Name"       icon={User}  field="name"            placeholder="John Doe" />
-                <Field label="Email Address"   icon={Mail}  field="email"           placeholder="you@example.com" type="email" />
-                <Field label="Phone Number"    icon={Phone} field="phone"           placeholder="9876543210" />
+                <Field label="Full Name"     icon={User}  value={form.name}  onChange={update("name")}  placeholder="John Doe" />
+                <Field label="Email Address" icon={Mail}  value={form.email} onChange={update("email")} placeholder="you@example.com" type="email" />
+                <Field label="Phone Number"  icon={Phone} value={form.phone} onChange={update("phone")} placeholder="9876543210" />
 
                 <div>
                   <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">Password</Label>
@@ -137,7 +139,7 @@ export default function Register() {
                   </div>
                 </div>
 
-                <Field label="Confirm Password" icon={Lock} field="confirmPassword" placeholder="Repeat your password" type="password" />
+                <Field label="Confirm Password" icon={Lock} value={form.confirmPassword} onChange={update("confirmPassword")} placeholder="Repeat your password" type="password" />
 
                 <div>
                   <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">

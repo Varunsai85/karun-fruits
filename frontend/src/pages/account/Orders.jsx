@@ -30,7 +30,7 @@ const MOCK_ORDERS = [
 
 export default function Orders() {
   const [search, setSearch] = useState("");
-  const [page,   setPage]   = useState(0);
+  const [page] = useState(0);
 
   const { data, isLoading } = useQuery({
     queryKey: ["my-orders", page],

@@ -100,8 +100,9 @@ export default function Products() {
 
   useEffect(() => {
     if (categoryParam && !selectedCategories.includes(categoryParam)) {
-      setSelectedCategories([categoryParam]);
+      setSelectedCategories([categoryParam]); // eslint-disable-line react-hooks/set-state-in-effect
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryParam]);
 
   const { data, isLoading } = useQuery({
@@ -126,7 +127,6 @@ export default function Products() {
     let filtered = raw.filter(p => {
       if (p.price < priceRange[0] || p.price > priceRange[1]) return false;
       if (selectedCategories.length > 0) {
-        const catLabel = CATEGORIES.find(c => c.id === selectedCategories.find(s => s === c.id))?.label;
         const matches = selectedCategories.some(slug => {
           const label = CATEGORIES.find(c => c.id === slug)?.label || "";
           return p.category?.name?.toLowerCase() === label.toLowerCase();

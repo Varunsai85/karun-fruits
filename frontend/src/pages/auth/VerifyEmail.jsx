@@ -16,7 +16,7 @@ export default function VerifyEmail() {
 
   useEffect(() => {
     if (!token) {
-      setStatus("error");
+      setStatus("error"); // eslint-disable-line react-hooks/set-state-in-effect
       setErrorMsg("No verification token found in the link.");
       return;
     }
@@ -34,6 +34,7 @@ export default function VerifyEmail() {
           err?.response?.data?.message || "Invalid or expired verification link."
         );
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return (

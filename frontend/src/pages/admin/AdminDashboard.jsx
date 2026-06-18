@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ShoppingCart, Users, Package, TrendingUp, AlertCircle, Clock, CheckCircle } from "lucide-react";
 import api from "@/services/api";
-import { formatPrice, formatDate } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 
 const MOCK_STATS = {
   totalOrders: 1247, pendingOrders: 23, totalRevenue: 285600,
