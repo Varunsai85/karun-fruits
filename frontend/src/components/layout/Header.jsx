@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ShoppingCart, Heart, User, Menu, X, Phone, ChevronDown, LogOut, Package, Settings } from "lucide-react";
+import { Search, ShoppingCart, Heart, User, Menu, X, ChevronDown, LogOut, Package, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useCartStore } from "@/store/cartStore";
@@ -63,22 +63,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Top strip */}
-      <div className="bg-[#0A1208] text-[#7A8F7C] text-[11px] py-2 px-4 hidden md:block border-b border-[#2A3A2C]">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <span className="flex items-center gap-1.5 tracking-wide">
-            <Phone className="w-3 h-3" /> 08104956871
-            <span className="mx-3 opacity-30">|</span>
-            Free delivery on orders above ₹499
-          </span>
-          <div className="flex items-center gap-4">
-            <Link to="/track-order" className="hover:text-[#F5F0E8] transition-colors tracking-wide">Track Order</Link>
-            <span className="opacity-30">|</span>
-            <a href="https://wa.me/918104956871" target="_blank" rel="noreferrer" className="hover:text-[#F5F0E8] transition-colors tracking-wide">WhatsApp</a>
-          </div>
-        </div>
-      </div>
-
       {/* Main header */}
       <motion.header
         className={cn(

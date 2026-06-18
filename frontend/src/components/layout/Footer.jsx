@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Tv } from "lucide-react";
 
+const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
 const CATEGORIES = [
   { name: "Almonds",        slug: "almonds" },
   { name: "Cashews",        slug: "cashews" },
@@ -108,7 +110,7 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {CATEGORIES.map((cat) => (
                 <li key={cat.slug}>
-                  <Link to={`/products?category=${cat.slug}`} className="text-sm text-[#7A8F7C] hover:text-[#F5F0E8] transition-colors">
+                  <Link to={`/products?category=${cat.slug}`} onClick={scrollTop} className="text-sm text-[#7A8F7C] hover:text-[#F5F0E8] transition-colors">
                     {cat.name}
                   </Link>
                 </li>
@@ -122,7 +124,7 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {QUICK_LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-sm text-[#7A8F7C] hover:text-[#F5F0E8] transition-colors">
+                  <Link to={l.to} onClick={scrollTop} className="text-sm text-[#7A8F7C] hover:text-[#F5F0E8] transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -169,9 +171,9 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-[#5A6A5C]">
           <span>© {new Date().getFullYear()} Karun Fruits. All rights reserved.</span>
           <div className="flex gap-4">
-            <Link to="/privacy-policy" className="hover:text-[#9AAA9C] transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-[#9AAA9C] transition-colors">Terms</Link>
-            <Link to="/shipping-policy" className="hover:text-[#9AAA9C] transition-colors">Shipping</Link>
+            <Link to="/privacy-policy" onClick={scrollTop} className="hover:text-[#9AAA9C] transition-colors">Privacy</Link>
+            <Link to="/terms" onClick={scrollTop} className="hover:text-[#9AAA9C] transition-colors">Terms</Link>
+            <Link to="/shipping-policy" onClick={scrollTop} className="hover:text-[#9AAA9C] transition-colors">Shipping</Link>
           </div>
         </div>
       </div>
