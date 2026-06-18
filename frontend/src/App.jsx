@@ -28,6 +28,11 @@ const AdminLayout = lazy(() => import("@/pages/admin/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 const AdminProducts = lazy(() => import("@/pages/admin/AdminProducts"));
 const AdminOrders = lazy(() => import("@/pages/admin/AdminOrders"));
+const AdminCategories = lazy(() => import("@/pages/admin/AdminCategories"));
+const AdminCoupons = lazy(() => import("@/pages/admin/AdminCoupons"));
+const AdminCustomers = lazy(() => import("@/pages/admin/AdminCustomers"));
+const AdminBanners = lazy(() => import("@/pages/admin/AdminBanners"));
+const AdminAnalytics = lazy(() => import("@/pages/admin/AdminAnalytics"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
@@ -67,57 +72,67 @@ function AdminRoute({ children }) {
 
 export default function App() {
   return (
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              {/* Admin routes — no Layout wrapper */}
-              <Route path="admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="orders" element={<AdminOrders />} />
-              </Route>
-
-              <Route element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="products" element={<Products />} />
-                <Route path="products/:slug" element={<ProductDetail />} />
-                <Route path="cart" element={<Cart />} />
-                <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-                <Route path="track-order" element={<TrackOrder />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="about" element={<About />} />
-                <Route path="contact" element={<Contact />} />
-                <Route path="privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="terms" element={<TermsAndConditions />} />
-                <Route path="shipping-policy" element={<ShippingPolicy />} />
-                <Route path="account" element={<ProtectedRoute><AccountLayout /></ProtectedRoute>}>
-                  <Route index element={<Profile />} />
-                  <Route path="orders" element={<Orders />} />
-                  <Route path="wishlist" element={<Wishlist />} />
-                  <Route path="addresses" element={<Addresses />} />
-                  <Route path="loyalty" element={<Loyalty />} />
-                  <Route path="referral" element={<Referral />} />
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                {/* Admin routes — no Layout wrapper */}
+                <Route path="admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="categories" element={<AdminCategories />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="customers" element={<AdminCustomers />} />
+                  <Route path="coupons" element={<AdminCoupons />} />
+                  <Route path="banners" element={<AdminBanners />} />
+                  <Route path="analytics" element={<AdminAnalytics />} />
                 </Route>
-                <Route path="*" element={
-                  <div className="min-h-[60vh] flex items-center justify-center text-center px-4 bg-[#0D1A10]">
-                    <div>
-                      <div className="text-8xl mb-6">🌰</div>
-                      <h1 className="font-heading text-5xl font-light text-[#F5F0E8] mb-3">Page Not Found</h1>
-                      <p className="text-[#9AAA9C] mb-8 font-light">The page you're looking for doesn't exist.</p>
-                      <a href="/" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-full transition-colors">
-                        Back to Home
-                      </a>
+
+                <Route element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="products" element={<Products />} />
+                  <Route path="products/:slug" element={<ProductDetail />} />
+                  <Route path="cart" element={<Cart />} />
+                  <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+                  <Route path="track-order" element={<TrackOrder />} />
+                  <Route path="login" element={<Login />} />
+                  <Route path="register" element={<Register />} />
+                  <Route path="forgot-password" element={<ForgotPassword />} />
+                  <Route path="reset-password" element={<ResetPassword />} />
+                  <Route path="verify-email" element={<VerifyEmail />} />
+                  <Route path="about" element={<About />} />
+                  <Route path="contact" element={<Contact />} />
+                  <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="terms" element={<TermsAndConditions />} />
+                  <Route path="shipping-policy" element={<ShippingPolicy />} />
+                  <Route path="account" element={<ProtectedRoute><AccountLayout /></ProtectedRoute>}>
+                    <Route index element={<Profile />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="wishlist" element={<Wishlist />} />
+                    <Route path="addresses" element={<Addresses />} />
+                    <Route path="loyalty" element={<Loyalty />} />
+                    <Route path="referral" element={<Referral />} />
+                  </Route>
+                  <Route path="*" element={
+                    <div className="min-h-[60vh] flex items-center justify-center text-center px-4 bg-[#0D1A10]">
+                      <div>
+                        <div className="text-8xl mb-6">🌰</div>
+                        <h1 className="font-heading text-5xl font-light text-[#F5F0E8] mb-3">Page Not Found</h1>
+                        <p className="text-[#9AAA9C] mb-8 font-light">The page you're looking for doesn't exist.</p>
+                        <a href="/" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C17A35] hover:bg-[#A86929] text-white font-light tracking-wide rounded-full transition-colors">
+                          Back to Home
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                } />
-              </Route>
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </HelmetProvider>
+                  } />
+                </Route>
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </HelmetProvider>
+    </GoogleOAuthProvider>
   );
 }

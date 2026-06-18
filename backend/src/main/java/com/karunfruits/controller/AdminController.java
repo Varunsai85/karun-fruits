@@ -1,5 +1,6 @@
 package com.karunfruits.controller;
 
+import com.karunfruits.dto.response.AnalyticsResponse;
 import com.karunfruits.entity.*;
 import com.karunfruits.exception.ResourceNotFoundException;
 import com.karunfruits.repository.*;
@@ -10,7 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -23,6 +26,7 @@ public class AdminController {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
+    private final BannerRepository bannerRepository;
 
     // ─── Stats ───────────────────────────────────────────────
     @GetMapping("/stats")
@@ -48,6 +52,63 @@ public class AdminController {
         return ResponseEntity.ok(
                 orderRepository.findAll(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"))).getContent()
         );
+    }
+
+    // ─── Analytics ─────────────────────────────────────────────
+    @GetMapping("/analytics")
+    public ResponseEntity<AnalyticsResponse> getAnalytics(
+            @RequestParam(defaultValue = "30d") String period) {
+        int days = switch (period) {
+            case "7d" -> 7;
+            case "90d" -> 90;
+            default -> 30;
+        };
+        LocalDateTime startDate = LocalDateTime.now().minusDays(days);
+
+        List<AnalyticsResponse.DailyStat> dailyRevenue = orderRepository.getDailyRevenue(startDate)
+                .stream()
+                .map(row -> new AnalyticsResponse.DailyStat(
+                        row[0].toString(),
+                        new BigDecimal(row[1].toString()),
+                        ((Number) row[2]).longValue()))
+                .toList();
+
+        List<AnalyticsResponse.TopProduct> topProducts = orderRepository.getTopProducts(startDate)
+                .stream()
+                .map(row -> new AnalyticsResponse.TopProduct(
+                        row[0].toString(),
+                        ((Number) row[1]).longValue(),
+                        new BigDecimal(row[2].toString())))
+                .toList();
+
+        Map<String, Long> ordersByStatus = orderRepository.countByStatusGrouped()
+                .stream()
+                .collect(Collectors.toMap(
+                        row -> ((Order.OrderStatus) row[0]).name(),
+                        row -> ((Number) row[1]).longValue()));
+
+        Map<String, BigDecimal> revenueByPaymentMethod = orderRepository.revenueByPaymentMethod()
+                .stream()
+                .collect(Collectors.toMap(
+                        row -> ((Order.PaymentMethod) row[0]).name(),
+                        row -> new BigDecimal(row[1].toString())));
+
+        BigDecimal totalRevenue = dailyRevenue.stream()
+                .map(AnalyticsResponse.DailyStat::getRevenue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long totalOrders = dailyRevenue.stream()
+                .mapToLong(AnalyticsResponse.DailyStat::getOrders)
+                .sum();
+
+        return ResponseEntity.ok(AnalyticsResponse.builder()
+                .dailyRevenue(dailyRevenue)
+                .topProducts(topProducts)
+                .ordersByStatus(ordersByStatus)
+                .revenueByPaymentMethod(revenueByPaymentMethod)
+                .totalRevenue(totalRevenue)
+                .totalOrders(totalOrders)
+                .build());
     }
 
     // ─── Products ─────────────────────────────────────────────
@@ -139,24 +200,55 @@ public class AdminController {
     @GetMapping("/customers")
     public ResponseEntity<Page<User>> getCustomers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(userRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending())));
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String search) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(userRepository.findAll(pageable));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (body.get("active") != null) user.setActive((Boolean) body.get("active"));
+        return ResponseEntity.ok(userRepository.save(user));
     }
 
     // ─── Categories ─────────────────────────────────────────────
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getAllCategories() {
+        return ResponseEntity.ok(categoryRepository.findAll(Sort.by("sortOrder").ascending()));
+    }
+
     @PostMapping("/categories")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@RequestBody Map<String, Object> body) {
+        Category category = new Category();
+        category.setName(body.get("name").toString());
+        category.setSlug(body.get("name").toString().toLowerCase().replaceAll("[^a-z0-9]+", "-"));
+        if (body.get("description") != null) category.setDescription(body.get("description").toString());
+        if (body.get("imageUrl") != null) category.setImageUrl(body.get("imageUrl").toString());
+        if (body.get("sortOrder") != null) category.setSortOrder(Integer.parseInt(body.get("sortOrder").toString()));
         return ResponseEntity.ok(categoryRepository.save(category));
     }
 
     @PutMapping("/categories/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category body) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        category.setName(body.getName());
-        category.setDescription(body.getDescription());
-        category.setImageUrl(body.getImageUrl());
+        if (body.get("name") != null) {
+            category.setName(body.get("name").toString());
+            category.setSlug(body.get("name").toString().toLowerCase().replaceAll("[^a-z0-9]+", "-"));
+        }
+        if (body.get("description") != null) category.setDescription(body.get("description").toString());
+        if (body.get("imageUrl") != null) category.setImageUrl(body.get("imageUrl").toString());
+        if (body.get("sortOrder") != null) category.setSortOrder(Integer.parseInt(body.get("sortOrder").toString()));
         return ResponseEntity.ok(categoryRepository.save(category));
+    }
+
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     // ─── Coupons ──────────────────────────────────────────────
@@ -170,19 +262,69 @@ public class AdminController {
         return ResponseEntity.ok(couponRepository.save(coupon));
     }
 
+    @PutMapping("/coupons/{id}")
+    public ResponseEntity<Coupon> updateCoupon(@PathVariable Long id, @RequestBody Coupon body) {
+        Coupon coupon = couponRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon not found"));
+        coupon.setCode(body.getCode());
+        coupon.setDiscountType(body.getDiscountType());
+        coupon.setDiscountValue(body.getDiscountValue());
+        coupon.setMinOrderAmount(body.getMinOrderAmount());
+        coupon.setMaxDiscount(body.getMaxDiscount());
+        coupon.setUsageLimit(body.getUsageLimit());
+        coupon.setExpiresAt(body.getExpiresAt());
+        coupon.setActive(body.isActive());
+        return ResponseEntity.ok(couponRepository.save(coupon));
+    }
+
     @DeleteMapping("/coupons/{id}")
     public ResponseEntity<Void> deleteCoupon(@PathVariable Long id) {
         couponRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // ─── User profile update ─────────────────────────────────
-    @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        if (body.get("active") != null) user.setActive((Boolean) body.get("active"));
-        return ResponseEntity.ok(userRepository.save(user));
+    // ─── Banners ──────────────────────────────────────────────
+    @GetMapping("/banners")
+    public ResponseEntity<List<Banner>> getBanners() {
+        return ResponseEntity.ok(bannerRepository.findAllByOrderBySortOrderAsc());
+    }
+
+    @PostMapping("/banners")
+    public ResponseEntity<Banner> createBanner(@RequestBody Map<String, Object> body) {
+        Banner banner = Banner.builder()
+                .title(body.get("title").toString())
+                .subtitle(body.get("subtitle") != null ? body.get("subtitle").toString() : null)
+                .imageUrl(body.get("imageUrl").toString())
+                .link(body.get("link") != null ? body.get("link").toString() : null)
+                .sortOrder(body.get("sortOrder") != null ? Integer.parseInt(body.get("sortOrder").toString()) : 0)
+                .build();
+        return ResponseEntity.ok(bannerRepository.save(banner));
+    }
+
+    @PutMapping("/banners/{id}")
+    public ResponseEntity<Banner> updateBanner(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Banner banner = bannerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Banner not found"));
+        if (body.get("title") != null) banner.setTitle(body.get("title").toString());
+        if (body.get("subtitle") != null) banner.setSubtitle(body.get("subtitle").toString());
+        if (body.get("imageUrl") != null) banner.setImageUrl(body.get("imageUrl").toString());
+        if (body.get("link") != null) banner.setLink(body.get("link").toString());
+        if (body.get("sortOrder") != null) banner.setSortOrder(Integer.parseInt(body.get("sortOrder").toString()));
+        return ResponseEntity.ok(bannerRepository.save(banner));
+    }
+
+    @PatchMapping("/banners/{id}/toggle")
+    public ResponseEntity<Banner> toggleBanner(@PathVariable Long id) {
+        Banner banner = bannerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Banner not found"));
+        banner.setActive(!banner.isActive());
+        return ResponseEntity.ok(bannerRepository.save(banner));
+    }
+
+    @DeleteMapping("/banners/{id}")
+    public ResponseEntity<Void> deleteBanner(@PathVariable Long id) {
+        bannerRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     private String toSlug(String text) {
