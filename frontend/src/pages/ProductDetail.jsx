@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { motion, AnimatePresence } from "framer-motion";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import {
   Star, ShoppingCart, Heart, Share2, ChevronRight, ChevronLeft,
   Shield, Truck, RefreshCw, Plus, Minus, MessageCircle
@@ -15,6 +15,7 @@ import ProductCard from "@/components/common/ProductCard";
 import { productService } from "@/services/productService";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
+import { useAuthStore } from "@/store/authStore";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -56,9 +57,14 @@ const MOCK_REVIEWS = [
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const qc = useQueryClient();
+  const { isAuthenticated } = useAuthStore();
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [reviewForm, setReviewForm] = useState({ rating: 0, comment: "" });
+  const [hoverRating, setHoverRating] = useState(0);
 
   const addItem = useCartStore((s) => s.addItem);
   const { toggle, has } = useWishlistStore();
@@ -82,6 +88,23 @@ export default function ProductDetail() {
     enabled: !!product?.id,
     placeholderData: MOCK_REVIEWS,
   });
+
+  const reviewMutation = useMutation({
+    mutationFn: (data) => productService.addReview(product?.id, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["reviews", product?.id] });
+      setReviewForm({ rating: 0, comment: "" });
+      toast.success("Review submitted! It will appear after approval.");
+    },
+    onError: (err) => toast.error(err?.response?.data?.message || "Failed to submit review"),
+  });
+
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!reviewForm.rating) { toast.error("Please select a rating"); return; }
+    if (!reviewForm.comment.trim()) { toast.error("Please write a comment"); return; }
+    reviewMutation.mutate(reviewForm);
+  };
 
   const p = product || MOCK_PRODUCT;
   const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.content || MOCK_REVIEWS;
@@ -379,6 +402,61 @@ export default function ProductDetail() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Write a review */}
+            <div className="mb-8 border-t border-[#F5ECD7] pt-6">
+              <h3 className="font-semibold text-[#3D2000] mb-4">Write a Review</h3>
+              {isAuthenticated ? (
+                <form onSubmit={handleReviewSubmit} className="space-y-4">
+                  <div>
+                    <p className="text-sm text-[#8B6914] mb-2">Your Rating</p>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onMouseEnter={() => setHoverRating(s)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          onClick={() => setReviewForm(f => ({ ...f, rating: s }))}
+                          className="transition-transform hover:scale-110"
+                        >
+                          <Star className={`w-7 h-7 transition-colors ${
+                            s <= (hoverRating || reviewForm.rating)
+                              ? "fill-[#C8860A] text-[#C8860A]"
+                              : "text-[#E8D5B5]"
+                          }`} />
+                        </button>
+                      ))}
+                      {reviewForm.rating > 0 && (
+                        <span className="ml-2 text-sm text-[#8B6914] self-center">
+                          {["", "Poor", "Fair", "Good", "Very Good", "Excellent"][reviewForm.rating]}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <textarea
+                      value={reviewForm.comment}
+                      onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))}
+                      placeholder="Share your experience with this product…"
+                      rows={3}
+                      className="w-full border border-[#E8D5B5] rounded-xl p-3 text-sm text-[#3D2000] placeholder:text-[#C4A882] resize-none focus:outline-none focus:border-[#C8860A]"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={reviewMutation.isPending}
+                    className="px-6 py-2.5 bg-[#C8860A] hover:bg-[#A86929] disabled:opacity-60 text-white text-sm rounded-xl transition-colors"
+                  >
+                    {reviewMutation.isPending ? "Submitting…" : "Submit Review"}
+                  </button>
+                </form>
+              ) : (
+                <p className="text-sm text-[#8B6914]">
+                  <Link to="/login" className="text-[#C8860A] hover:underline">Sign in</Link> to write a review.
+                </p>
+              )}
             </div>
 
             <div className="space-y-5">
