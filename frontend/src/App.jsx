@@ -39,6 +39,7 @@ const Contact = lazy(() => import("@/pages/Contact"));
 const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
 const TermsAndConditions = lazy(() => import("@/pages/TermsAndConditions"));
 const ShippingPolicy = lazy(() => import("@/pages/ShippingPolicy"));
+const ReturnPolicy = lazy(() => import("@/pages/ReturnPolicy"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -109,6 +110,7 @@ export default function App() {
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="terms" element={<TermsAndConditions />} />
                   <Route path="shipping-policy" element={<ShippingPolicy />} />
+                  <Route path="return-policy" element={<ReturnPolicy />} />
                   <Route path="account" element={<ProtectedRoute><AccountLayout /></ProtectedRoute>}>
                     <Route index element={<Profile />} />
                     <Route path="orders" element={<Orders />} />
