@@ -5,6 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig({
+  // Load .env from the repo root instead of frontend/, so frontend and backend share one file.
+  envDir: path.resolve(import.meta.dirname, '..'),
   plugins: [
     react(),
     tailwindcss(),

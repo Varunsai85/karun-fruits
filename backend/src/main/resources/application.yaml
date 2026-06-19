@@ -1,4 +1,10 @@
 spring:
+  # Load the shared root .env (one level up from backend/) as the source for ${...} placeholders below.
+  # Path is relative to the working directory the app is started from (backend/ per ./mvnw spring-boot:run).
+  # "optional:" means startup won't fail if the file is absent (e.g. in production where real env vars are injected).
+  config:
+    import: optional:file:../.env[.properties]
+
   application:
     name: karunfruits
 
@@ -44,22 +50,22 @@ jwt:
 
 razorpay:
   key:
-    id: ${RAZORPAY_KEY_ID:}
-    secret: ${RAZORPAY_KEY_SECRET:}
+    id: ${RAZORPAY_KEY_ID}
+    secret: ${RAZORPAY_KEY_SECRET}
 
 twilio:
-  account-sid: ${TWILIO_ACCOUNT_SID:}
-  auth-token: ${TWILIO_AUTH_TOKEN:}
-  phone-number: ${TWILIO_PHONE_NUMBER:}
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  auth-token: ${TWILIO_AUTH_TOKEN}
+  phone-number: ${TWILIO_PHONE_NUMBER}
 
 shiprocket:
-  email: ${SHIPROCKET_EMAIL:}
-  password: ${SHIPROCKET_PASSWORD:}
+  email: ${SHIPROCKET_EMAIL}
+  password: ${SHIPROCKET_PASSWORD}
 
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:5173}
   google:
-    client-id: ${GOOGLE_CLIENT_ID:}
+    client-id: ${GOOGLE_CLIENT_ID}
 
 logging:
   level:
