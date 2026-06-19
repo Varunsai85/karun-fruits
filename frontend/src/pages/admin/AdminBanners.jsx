@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2, X, Image, ToggleLeft, ToggleRight } from "lucide-react";
 import api from "@/services/api";
 import { toast } from "sonner";
+import { CardListSkeleton } from "@/components/admin/Skeletons";
 
 const EMPTY = { title: "", subtitle: "", imageUrl: "", link: "", sortOrder: 0 };
 
@@ -69,9 +70,7 @@ export default function AdminBanners() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-48">
-          <div className="w-7 h-7 border-2 border-[#2A3A2C] border-t-[#C17A35] rounded-full animate-spin" />
-        </div>
+        <CardListSkeleton rows={3} />
       ) : banners.length === 0 ? (
         <div className="text-center py-16 text-[#9AAA9C]">
           <Image className="w-12 h-12 mx-auto mb-3 opacity-30" />

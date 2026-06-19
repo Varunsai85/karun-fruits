@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart, Users, Package, TrendingUp, AlertCircle, Clock, CheckCircle } from "lucide-react";
 import api from "@/services/api";
 import { formatPrice } from "@/lib/utils";
+import { Block, TableSkeleton } from "@/components/admin/Skeletons";
 
 const STATUS_STYLES = {
   ORDER_PLACED: "bg-[#1a2a4a] text-[#7aacd8]", CONFIRMED: "bg-[#1a1a3a] text-[#8a8ad8]",
@@ -11,11 +12,11 @@ const STATUS_STYLES = {
 };
 
 export default function AdminDashboard() {
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: () => api.get("/admin/stats"),
   });
-  const { data: recentOrders } = useQuery({
+  const { data: recentOrders, isLoading: ordersLoading } = useQuery({
     queryKey: ["admin-recent-orders"],
     queryFn: () => api.get("/admin/orders/recent"),
   });
@@ -43,29 +44,38 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statCards.map((card, i) => (
-          <motion.div
-            key={card.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-5"
-          >
-            <div className={`w-10 h-10 rounded-xl ${card.bg} flex items-center justify-center mb-3`}>
-              <card.icon className={`w-4.5 h-4.5 ${card.color}`} />
-            </div>
-            <p className="font-heading text-[#F5F0E8] text-2xl font-light">{card.value}</p>
-            <p className="text-sm text-[#9AAA9C] mt-0.5 font-light">{card.label}</p>
-            <p className="text-xs text-[#5A6A5C] mt-0.5 font-light">{card.sub}</p>
-          </motion.div>
-        ))}
-      </div>
+      {statsLoading ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {Array.from({ length: 4 }).map((_, i) => <Block key={i} className="h-28" />)}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {statCards.map((card, i) => (
+            <motion.div
+              key={card.label}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-5"
+            >
+              <div className={`w-10 h-10 rounded-xl ${card.bg} flex items-center justify-center mb-3`}>
+                <card.icon className={`w-4.5 h-4.5 ${card.color}`} />
+              </div>
+              <p className="font-heading text-[#F5F0E8] text-2xl font-light">{card.value}</p>
+              <p className="text-sm text-[#9AAA9C] mt-0.5 font-light">{card.label}</p>
+              <p className="text-xs text-[#5A6A5C] mt-0.5 font-light">{card.sub}</p>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Orders */}
         <div className="lg:col-span-2 bg-[#162018] border border-[#2A3A2C] rounded-2xl p-6">
           <h2 className="font-heading text-[#F5F0E8] text-xl font-light mb-5">Recent Orders</h2>
+          {ordersLoading ? (
+            <TableSkeleton rows={5} cols={4} />
+          ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -91,6 +101,7 @@ export default function AdminDashboard() {
               </tbody>
             </table>
           </div>
+          )}
         </div>
 
         {/* Quick Actions */}

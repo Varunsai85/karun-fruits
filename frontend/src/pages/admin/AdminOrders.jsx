@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import api from "@/services/api";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
+import { TableSkeleton } from "@/components/admin/Skeletons";
 
 const ALL_STATUSES = ["ALL","ORDER_PLACED","CONFIRMED","PACKED","SHIPPED","OUT_FOR_DELIVERY","DELIVERED","CANCELLED"];
 const STATUS_STYLES = {
@@ -22,7 +23,7 @@ export default function AdminOrders() {
   const [newStatus, setNewStatus]       = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["admin-orders", search, statusFilter],
     queryFn: () => api.get("/admin/orders", { params: { search, status: statusFilter !== "ALL" ? statusFilter : undefined, size: 50 } }),
   });
@@ -68,6 +69,9 @@ export default function AdminOrders() {
         </Select>
       </div>
 
+      {isLoading ? (
+        <TableSkeleton rows={6} cols={7} />
+      ) : (
       <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -108,6 +112,7 @@ export default function AdminOrders() {
           </table>
         </div>
       </div>
+      )}
 
       {/* Order Detail Modal */}
       <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>

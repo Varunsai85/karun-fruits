@@ -5,6 +5,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
 import api from "@/services/api";
+import { Block } from "@/components/admin/Skeletons";
 
 const PERIODS = [
   { label: "7 Days", value: "7d" },
@@ -72,8 +73,17 @@ export default function AdminAnalytics() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-2 border-[#2A3A2C] border-t-[#C17A35] rounded-full animate-spin" />
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <Block className="h-24" />
+            <Block className="h-24" />
+          </div>
+          <Block className="h-56" />
+          <Block className="h-44" />
+          <div className="grid grid-cols-3 gap-4">
+            <Block className="h-64 col-span-2" />
+            <Block className="h-64" />
+          </div>
         </div>
       ) : (
         <>
