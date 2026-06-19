@@ -14,12 +14,6 @@ const STATUS_STYLES = {
   OUT_FOR_DELIVERY: "bg-[#2a1a3a] text-[#a87ad8]", DELIVERED: "bg-[#1a2a1a] text-[#6DAA6D]",
   CANCELLED: "bg-[#2a1a1a] text-red-400",
 };
-const MOCK_ORDERS = [
-  { id: 1, orderNumber: "KF-1733001", user: { name: "Priya S.", email: "priya@email.com" }, total: 998,  status: "DELIVERED",    paymentMethod: "RAZORPAY", createdAt: "2024-12-10", items: [{ productName: "Almonds 500g", quantity: 2, price: 499 }] },
-  { id: 2, orderNumber: "KF-1733002", user: { name: "Raj K.",   email: "raj@email.com" },   total: 499,  status: "SHIPPED",      paymentMethod: "COD",      createdAt: "2024-12-10", items: [{ productName: "Medjool Dates 500g", quantity: 1, price: 499 }] },
-  { id: 3, orderNumber: "KF-1733003", user: { name: "Anita D.", email: "anita@email.com" }, total: 1499, status: "ORDER_PLACED", paymentMethod: "RAZORPAY", createdAt: "2024-12-10", items: [{ productName: "Premium Gift Box", quantity: 1, price: 1499 }] },
-];
-
 export default function AdminOrders() {
   const qc = useQueryClient();
   const [search, setSearch]             = useState("");
@@ -31,7 +25,6 @@ export default function AdminOrders() {
   const { data } = useQuery({
     queryKey: ["admin-orders", search, statusFilter],
     queryFn: () => api.get("/admin/orders", { params: { search, status: statusFilter !== "ALL" ? statusFilter : undefined, size: 50 } }),
-    placeholderData: { content: MOCK_ORDERS },
   });
 
   const updateMutation = useMutation({
@@ -40,7 +33,7 @@ export default function AdminOrders() {
     onError: () => toast.error("Failed to update order"),
   });
 
-  const orders = data?.content || MOCK_ORDERS;
+  const orders = data?.content || [];
 
   const openOrder = (order) => { setSelectedOrder(order); setNewStatus(order.status); setTrackingNumber(order.trackingNumber || ""); };
 

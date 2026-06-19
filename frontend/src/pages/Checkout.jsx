@@ -49,7 +49,7 @@ export default function Checkout() {
 
   const { data: savedAddresses = [] } = useQuery({
     queryKey: ["addresses"],
-    queryFn: () => userService.getAddresses().then(r => r.data),
+    queryFn: () => userService.getAddresses(),
     staleTime: 2 * 60 * 1000,
   });
 

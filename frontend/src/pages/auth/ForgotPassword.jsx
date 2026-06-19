@@ -5,22 +5,23 @@ import { Mail, CheckCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/services/authService";
-import { toast } from "sonner";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) { toast.error("Please enter your email address"); return; }
+    setFormError(null);
+    if (!email) { setFormError("Please enter your email address"); return; }
     setLoading(true);
     try {
       await authService.forgotPassword(email);
       setSubmitted(true);
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong. Please try again.");
+      setFormError(err?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -81,6 +82,12 @@ export default function ForgotPassword() {
                 onSubmit={handleSubmit}
                 className="space-y-5"
               >
+                {formError && (
+                  <div className="p-4 bg-red-900/30 border border-red-700/50 rounded-xl text-sm">
+                    <p className="text-red-300">{formError}</p>
+                  </div>
+                )}
+
                 <div>
                   <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">
                     Email Address

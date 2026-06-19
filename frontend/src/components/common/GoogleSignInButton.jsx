@@ -21,9 +21,9 @@ function ActiveGoogleButton({ onSuccess }) {
     onSuccess: async (tokenResponse) => {
       try {
         const res = await authService.googleLogin(tokenResponse.access_token);
-        onSuccess(res.data);
+        onSuccess(res);
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Google sign-in failed");
+        toast.error(err?.message || "Google sign-in failed");
       }
     },
     onError: () => toast.error("Google sign-in failed"),

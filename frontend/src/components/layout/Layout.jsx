@@ -15,7 +15,7 @@ export default function Layout() {
       <WhatsAppButton />
       <Toaster
         richColors
-        position="top-right"
+        position="top-center"
         toastOptions={{
           style: { background: "#162018", border: "1px solid #2A3A2C", color: "#F5F0E8" },
         }}

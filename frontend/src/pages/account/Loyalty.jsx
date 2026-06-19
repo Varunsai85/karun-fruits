@@ -13,7 +13,7 @@ const HOW_IT_WORKS = [
 export default function Loyalty() {
   const { data, isLoading } = useQuery({
     queryKey: ["loyalty"],
-    queryFn: () => userService.getLoyaltyInfo().then((r) => r.data),
+    queryFn: () => userService.getLoyaltyInfo(),
   });
 
   const points = data?.points ?? 0;

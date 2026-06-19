@@ -18,28 +18,32 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState(null);
   const [unverifiedEmail, setUnverifiedEmail] = useState(null);
   const [resendLoading, setResendLoading] = useState(false);
+  const [resendMessage, setResendMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError(null);
     if (!form.email || !form.password) {
-      toast.error("Please fill in all fields");
+      setFormError("Please fill in all fields");
       return;
     }
     setLoading(true);
     setUnverifiedEmail(null);
+    setResendMessage(null);
     try {
       const res = await authService.login(form);
-      login(res.data.user, res.data.token);
-      toast.success(`Welcome back, ${res.data.user.name}!`);
+      login(res.user, res.token);
+      toast.success(`Welcome back, ${res.user.name}!`);
       navigate(redirect);
     } catch (err) {
-      const msg = err?.response?.data?.message || err?.message || "";
+      const msg = err?.message || "";
       if (msg === "EMAIL_NOT_VERIFIED") {
         setUnverifiedEmail(form.email);
       } else {
-        toast.error(msg || "Invalid email or password");
+        setFormError(msg || "Invalid email or password");
       }
     } finally {
       setLoading(false);
@@ -49,11 +53,12 @@ export default function Login() {
   const handleResendVerification = async () => {
     if (!unverifiedEmail) return;
     setResendLoading(true);
+    setResendMessage(null);
     try {
       await authService.resendVerification(unverifiedEmail);
-      toast.success("Verification email sent! Please check your inbox.");
+      setResendMessage({ type: "success", text: "Verification email sent! Please check your inbox." });
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to resend email");
+      setResendMessage({ type: "error", text: err?.message || "Failed to resend email" });
     } finally {
       setResendLoading(false);
     }
@@ -74,6 +79,13 @@ export default function Login() {
         </div>
 
         <div className="bg-[#162018] border border-[#2A3A2C] rounded-2xl p-8">
+          {/* Login error */}
+          {formError && (
+            <div className="mb-5 p-4 bg-red-900/30 border border-red-700/50 rounded-xl text-sm">
+              <p className="text-red-300">{formError}</p>
+            </div>
+          )}
+
           {/* Email not verified banner */}
           {unverifiedEmail && (
             <div className="mb-5 p-4 bg-amber-900/30 border border-amber-700/50 rounded-xl text-sm">
@@ -89,6 +101,11 @@ export default function Login() {
               >
                 {resendLoading ? "Sending..." : "Resend verification email"}
               </button>
+              {resendMessage && (
+                <p className={`text-xs mt-2 ${resendMessage.type === "success" ? "text-emerald-300" : "text-red-300"}`}>
+                  {resendMessage.text}
+                </p>
+              )}
             </div>
           )}
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ShoppingCart, Heart, User, Menu, X, ChevronDown, LogOut, Package, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -7,15 +8,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuthStore } from "@/store/authStore";
+import { productService } from "@/services/productService";
 import { cn } from "@/lib/utils";
-
-const CATEGORIES = [
-  { name: "Dry Fruits",     slug: "dry-fruits",     items: ["Almonds","Cashews","Pistachios","Walnuts","Dates","Raisins","Figs","Apricots"] },
-  { name: "Seeds",          slug: "seeds",           items: ["Pumpkin Seeds","Sunflower Seeds","Chia Seeds","Flax Seeds","Makhana"] },
-  { name: "Healthy Snacks", slug: "healthy-snacks",  items: [] },
-  { name: "Gift Boxes",     slug: "gift-boxes",      items: [] },
-  { name: "Combo Packs",    slug: "combo-packs",     items: [] },
-];
 
 const NAV_LINKS = [
   { label: "Home",       to: "/" },
@@ -38,6 +32,12 @@ export default function Header() {
   const itemCount     = useCartStore((s) => s.getItemCount());
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const { isAuthenticated, user, logout, isAdmin } = useAuthStore();
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: productService.getCategories,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -109,36 +109,22 @@ export default function Header() {
                     <AnimatePresence>
                       {shopHover && (
                         <motion.div
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[560px] bg-[#162018] border border-[#2A3A2C] rounded-2xl shadow-2xl overflow-hidden"
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[420px] bg-[#162018] border border-[#2A3A2C] rounded-2xl shadow-2xl overflow-hidden"
                           initial={{ opacity: 0, y: 8, scale: 0.97 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 8, scale: 0.97 }}
                           transition={{ duration: 0.18 }}
                         >
-                          <div className="grid grid-cols-3 gap-0">
-                            {CATEGORIES.map((cat, i) => (
-                              <div key={cat.slug} className={`p-5 ${i < CATEGORIES.length - 1 ? "border-r border-[#2A3A2C]" : ""}`}>
-                                <Link
-                                  to={`/products?category=${cat.slug}`}
-                                  className="label-luxury text-[#C17A35] hover:text-[#D4913F] transition-colors block mb-3"
-                                  onClick={() => setShopHover(false)}
-                                >
-                                  {cat.name}
-                                </Link>
-                                <ul className="space-y-1.5">
-                                  {cat.items.map((item) => (
-                                    <li key={item}>
-                                      <Link
-                                        to={`/products?category=${cat.slug}&q=${encodeURIComponent(item)}`}
-                                        className="text-xs text-[#7A8F7C] hover:text-[#F5F0E8] transition-colors block"
-                                        onClick={() => setShopHover(false)}
-                                      >
-                                        {item}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
+                          <div className="grid grid-cols-2 gap-1 p-3">
+                            {categories.map((cat) => (
+                              <Link
+                                key={cat.slug}
+                                to={`/products?category=${cat.slug}`}
+                                className="px-3 py-2.5 rounded-lg text-sm text-[#D0D8D2] hover:bg-[#1D2B1F] hover:text-[#F5F0E8] transition-colors"
+                                onClick={() => setShopHover(false)}
+                              >
+                                {cat.name}
+                              </Link>
                             ))}
                           </div>
                           <div className="border-t border-[#2A3A2C] px-5 py-3 flex justify-between items-center bg-[#0D1A10]">
@@ -285,7 +271,7 @@ export default function Header() {
               <div className="px-5 py-5 space-y-1">
                 <Link to="/" className="block py-2.5 text-[#F5F0E8] font-light tracking-wide border-b border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>Home</Link>
                 <Link to="/products" className="block py-2.5 text-[#F5F0E8] font-light tracking-wide border-b border-[#2A3A2C]" onClick={() => setMobileOpen(false)}>All Products</Link>
-                {CATEGORIES.map((cat) => (
+                {categories.map((cat) => (
                   <Link key={cat.slug} to={`/products?category=${cat.slug}`} className="block py-2 pl-3 text-sm text-[#9AAA9C] hover:text-[#F5F0E8] transition-colors" onClick={() => setMobileOpen(false)}>
                     {cat.name}
                   </Link>

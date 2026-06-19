@@ -4,17 +4,6 @@ import { ShoppingCart, Users, Package, TrendingUp, AlertCircle, Clock, CheckCirc
 import api from "@/services/api";
 import { formatPrice } from "@/lib/utils";
 
-const MOCK_STATS = {
-  totalOrders: 1247, pendingOrders: 23, totalRevenue: 285600,
-  totalCustomers: 892, todaySales: 12400, lowStockProducts: 5,
-};
-const MOCK_RECENT_ORDERS = [
-  { id: 1, orderNumber: "KF-1733001", customer: "Priya Sharma",  amount: 998,  status: "DELIVERED",    createdAt: "2024-12-10" },
-  { id: 2, orderNumber: "KF-1733002", customer: "Raj Kumar",     amount: 499,  status: "SHIPPED",      createdAt: "2024-12-10" },
-  { id: 3, orderNumber: "KF-1733003", customer: "Anita Desai",   amount: 1499, status: "ORDER_PLACED", createdAt: "2024-12-10" },
-  { id: 4, orderNumber: "KF-1733004", customer: "Vijay Patel",   amount: 749,  status: "CONFIRMED",    createdAt: "2024-12-09" },
-  { id: 5, orderNumber: "KF-1733005", customer: "Sunita Reddy",  amount: 349,  status: "PACKED",       createdAt: "2024-12-09" },
-];
 const STATUS_STYLES = {
   ORDER_PLACED: "bg-[#1a2a4a] text-[#7aacd8]", CONFIRMED: "bg-[#1a1a3a] text-[#8a8ad8]",
   PACKED: "bg-[#2a2a1a] text-[#C17A35]", SHIPPED: "bg-[#2a1a1a] text-[#d87a5a]",
@@ -25,16 +14,14 @@ export default function AdminDashboard() {
   const { data: stats } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: () => api.get("/admin/stats"),
-    placeholderData: MOCK_STATS,
   });
   const { data: recentOrders } = useQuery({
     queryKey: ["admin-recent-orders"],
     queryFn: () => api.get("/admin/orders/recent"),
-    placeholderData: MOCK_RECENT_ORDERS,
   });
 
-  const s      = stats || MOCK_STATS;
-  const orders = Array.isArray(recentOrders) ? recentOrders : MOCK_RECENT_ORDERS;
+  const s      = stats || {};
+  const orders = Array.isArray(recentOrders) ? recentOrders : [];
 
   const statCards = [
     { label: "Total Revenue",    value: formatPrice(s.totalRevenue),          icon: TrendingUp,  color: "text-[#C17A35]",  bg: "bg-[#C17A35]/10", sub: `Today: ${formatPrice(s.todaySales)}` },
@@ -92,8 +79,8 @@ export default function AdminDashboard() {
                 {orders.map((order) => (
                   <tr key={order.id} className="border-b border-[#2A3A2C] hover:bg-[#1D2B1F] transition-colors">
                     <td className="py-3 text-[#D0D8D2] font-light text-xs">{order.orderNumber}</td>
-                    <td className="py-3 text-[#D0D8D2] font-light">{order.customer}</td>
-                    <td className="py-3 text-[#C17A35] font-light">{formatPrice(order.amount)}</td>
+                    <td className="py-3 text-[#D0D8D2] font-light">{order.user?.name || order.addressName}</td>
+                    <td className="py-3 text-[#C17A35] font-light">{formatPrice(order.total)}</td>
                     <td className="py-3">
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-light ${STATUS_STYLES[order.status] || ""}`}>
                         {order.status?.replace(/_/g, " ")}

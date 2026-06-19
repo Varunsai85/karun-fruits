@@ -19,7 +19,7 @@ export default function AdminCoupons() {
 
   const { data: coupons = [], isLoading } = useQuery({
     queryKey: ["admin-coupons"],
-    queryFn: () => api.get("/admin/coupons").then(r => r.data),
+    queryFn: () => api.get("/admin/coupons"),
   });
 
   const saveMutation = useMutation({

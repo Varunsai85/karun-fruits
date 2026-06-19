@@ -11,13 +11,6 @@ import api from "@/services/api";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 
-const MOCK_PRODUCTS = [
-  { id: 1, name: "Premium California Almonds", category: { name: "Dry Fruits" }, price: 599, salePrice: 499, stock: 50, active: true },
-  { id: 2, name: "Whole Cashews W240", category: { name: "Dry Fruits" }, price: 699, salePrice: 599, stock: 32, active: true },
-  { id: 3, name: "Iranian Pistachios", category: { name: "Dry Fruits" }, price: 849, salePrice: 749, stock: 15, active: true },
-  { id: 4, name: "Makhana Fox Nuts", category: { name: "Healthy Snacks" }, price: 299, salePrice: 249, stock: 0, active: false },
-];
-
 const EMPTY_FORM = { name: "", categoryId: "", price: "", salePrice: "", weight: "", unit: "g", stock: "", description: "", sku: "", active: true };
 
 export default function AdminProducts() {
@@ -30,13 +23,11 @@ export default function AdminProducts() {
   const { data } = useQuery({
     queryKey: ["admin-products", search],
     queryFn: () => api.get("/admin/products", { params: { search, size: 50 } }),
-    placeholderData: { content: MOCK_PRODUCTS },
   });
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: () => api.get("/categories"),
-    placeholderData: [{ id: 1, name: "Dry Fruits" }, { id: 2, name: "Seeds" }],
   });
 
   const saveMutation = useMutation({
@@ -56,7 +47,7 @@ export default function AdminProducts() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-products"] }),
   });
 
-  const products = data?.content || MOCK_PRODUCTS;
+  const products = data?.content || [];
 
   const openCreate = () => { setEditingProduct(null); setForm(EMPTY_FORM); setShowModal(true); };
   const openEdit = (p) => {

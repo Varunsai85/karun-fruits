@@ -35,7 +35,7 @@ export default function AdminAnalytics() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-analytics", period],
-    queryFn: () => api.get(`/admin/analytics?period=${period}`).then(r => r.data),
+    queryFn: () => api.get(`/admin/analytics?period=${period}`),
   });
 
   const statusPieData = data?.ordersByStatus

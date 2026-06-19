@@ -14,7 +14,7 @@ export default function AdminBanners() {
 
   const { data: banners = [], isLoading } = useQuery({
     queryKey: ["admin-banners"],
-    queryFn: () => api.get("/admin/banners").then(r => r.data),
+    queryFn: () => api.get("/admin/banners"),
   });
 
   const saveMutation = useMutation({

@@ -89,6 +89,9 @@ public class ProductController {
     public ResponseEntity<List<Product>> getRecommendations(@PathVariable Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        if (product.getCategory() == null) {
+            return ResponseEntity.ok(List.of());
+        }
         List<Product> related = productRepository.findRelated(
                 product.getCategory().getId(), id, PageRequest.of(0, 6));
         return ResponseEntity.ok(related);

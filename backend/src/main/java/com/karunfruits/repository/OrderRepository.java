@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByStatus(Order.OrderStatus status, Pageable pageable);
     long countByStatus(Order.OrderStatus status);
     long countByUserId(Long userId);
+
+    @Query("SELECT COALESCE(SUM(o.total), 0) FROM Order o WHERE o.status NOT IN " +
+           "(com.karunfruits.entity.Order.OrderStatus.CANCELLED, com.karunfruits.entity.Order.OrderStatus.REFUNDED)")
+    BigDecimal sumTotalRevenue();
+
+    @Query("SELECT COALESCE(SUM(o.total), 0) FROM Order o WHERE o.createdAt >= :start AND o.status NOT IN " +
+           "(com.karunfruits.entity.Order.OrderStatus.CANCELLED, com.karunfruits.entity.Order.OrderStatus.REFUNDED)")
+    BigDecimal sumRevenueSince(@Param("start") LocalDateTime start);
 
     @Query(value = """
             SELECT TO_CHAR(o.created_at, 'YYYY-MM-DD') AS sale_date,

@@ -27,7 +27,7 @@ export default function Addresses() {
 
   const { data: addresses = [], isLoading } = useQuery({
     queryKey: ["addresses"],
-    queryFn: () => userService.getAddresses().then((r) => r.data),
+    queryFn: () => userService.getAddresses(),
   });
 
   const addMutation = useMutation({
@@ -37,7 +37,7 @@ export default function Addresses() {
       toast.success("Address added");
       resetForm();
     },
-    onError: (e) => toast.error(e.response?.data?.message || "Failed to add address"),
+    onError: (e) => toast.error(e?.message || "Failed to add address"),
   });
 
   const updateMutation = useMutation({
@@ -47,7 +47,7 @@ export default function Addresses() {
       toast.success("Address updated");
       resetForm();
     },
-    onError: (e) => toast.error(e.response?.data?.message || "Failed to update address"),
+    onError: (e) => toast.error(e?.message || "Failed to update address"),
   });
 
   const deleteMutation = useMutation({

@@ -35,13 +35,15 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState(null);
+  const [formError, setFormError] = useState(null);
 
   const update = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) { toast.error("Passwords do not match"); return; }
-    if (form.password.length < 8) { toast.error("Password must be at least 8 characters"); return; }
+    setFormError(null);
+    if (form.password !== form.confirmPassword) { setFormError("Passwords do not match"); return; }
+    if (form.password.length < 8) { setFormError("Password must be at least 8 characters"); return; }
     setLoading(true);
     try {
       await authService.register({
@@ -53,7 +55,7 @@ export default function Register() {
       });
       setRegisteredEmail(form.email);
     } catch (err) {
-      toast.error(err?.response?.data?.message || err?.message || "Registration failed. Please try again.");
+      setFormError(err?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -111,6 +113,12 @@ export default function Register() {
                 <span className="text-[#5A6A5C] text-xs font-light tracking-wide">OR</span>
                 <div className="flex-1 h-px bg-[#2A3A2C]" />
               </div>
+
+              {formError && (
+                <div className="mb-5 p-4 bg-red-900/30 border border-red-700/50 rounded-xl text-sm">
+                  <p className="text-red-300">{formError}</p>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <Field label="Full Name"     icon={User}  value={form.name}  onChange={update("name")}  placeholder="John Doe" />

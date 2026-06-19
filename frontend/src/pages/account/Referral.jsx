@@ -10,7 +10,7 @@ export default function Referral() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["referral"],
-    queryFn: () => userService.getReferralInfo().then((r) => r.data),
+    queryFn: () => userService.getReferralInfo(),
   });
 
   const referralCode = data?.referralCode ?? "";

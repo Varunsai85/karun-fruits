@@ -18,42 +18,20 @@ const SORT_OPTIONS = [
   { value: "rating",      label: "Top Rated",          icon: Star },
 ];
 
-const CATEGORIES = [
-  { id: "dry-fruits",     label: "Dry Fruits" },
-  { id: "seeds",          label: "Seeds" },
-  { id: "healthy-snacks", label: "Healthy Snacks" },
-  { id: "gift-boxes",     label: "Gift Boxes" },
-  { id: "combo-packs",    label: "Combo Packs" },
-];
-
-const MOCK_PRODUCTS = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  name: ["Premium California Almonds","Whole Cashews W240","Iranian Pistachios","Medjool Dates","Pumpkin Seeds","Dried Figs","Walnut Kernels","Makhana (Fox Nuts)","Dried Apricots","Cranberries","Chia Seeds","Flax Seeds","Sunflower Seeds","Raisins","Mixed Dry Fruits","Cashew Almond Mix","Dates & Walnut Box","Healthy Snack Mix","Premium Gift Box","Festival Combo Pack"][i],
-  slug: String(i + 1),
-  price: [599,699,849,499,349,449,649,299,399,299,199,149,199,249,799,899,599,449,1499,1199][i],
-  originalPrice: [799,899,null,null,399,null,null,null,null,null,null,null,null,299,null,null,null,null,1799,1399][i],
-  avgRating: 4 + Math.random() * 1,
-  reviewCount: Math.floor(Math.random() * 200) + 20,
-  isBestSeller: i < 5,
-  isNew: i >= 8 && i < 12,
-  imageUrl: `https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400&h=400&fit=crop`,
-  category: { name: ["Dry Fruits","Dry Fruits","Dry Fruits","Dry Fruits","Seeds","Dry Fruits","Dry Fruits","Healthy Snacks","Dry Fruits","Dry Fruits","Seeds","Seeds","Seeds","Dry Fruits","Mixed","Mixed","Gift Boxes","Healthy Snacks","Gift Boxes","Combo Packs"][i] },
-}));
-
-function FilterPanel({ selectedCategories, toggleCategory, displayRange, setDisplayRange, setPriceRange, setPage, clearFilters }) {
+function FilterPanel({ categories, selectedCategories, toggleCategory, displayRange, setDisplayRange, setPriceRange, setPage, clearFilters }) {
   return (
     <div className="space-y-7">
       <div>
         <h3 className="label-luxury text-[#C17A35] mb-4">Categories</h3>
         <div className="space-y-3">
-          {CATEGORIES.map((cat) => (
-            <label key={cat.id} className="flex items-center gap-2.5 cursor-pointer group">
+          {categories.map((cat) => (
+            <label key={cat.slug} className="flex items-center gap-2.5 cursor-pointer group">
               <Checkbox
-                checked={selectedCategories.includes(cat.id)}
-                onCheckedChange={() => toggleCategory(cat.id)}
+                checked={selectedCategories.includes(cat.slug)}
+                onCheckedChange={() => toggleCategory(cat.slug)}
                 className="border-[#2A3A2C] data-[state=checked]:bg-[#1E4620] data-[state=checked]:border-[#C17A35]"
               />
-              <span className="text-sm text-[#9AAA9C] group-hover:text-[#F5F0E8] transition-colors font-light">{cat.label}</span>
+              <span className="text-sm text-[#9AAA9C] group-hover:text-[#F5F0E8] transition-colors font-light">{cat.name}</span>
             </label>
           ))}
         </div>
@@ -99,11 +77,15 @@ export default function Products() {
   const categoryParam = searchParams.get("category") || "";
 
   useEffect(() => {
-    if (categoryParam && !selectedCategories.includes(categoryParam)) {
-      setSelectedCategories([categoryParam]); // eslint-disable-line react-hooks/set-state-in-effect
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setSelectedCategories(categoryParam ? [categoryParam] : []); // eslint-disable-line react-hooks/set-state-in-effect
+    setPage(0);
   }, [categoryParam]);
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: productService.getCategories,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["products", { search: searchQuery, categories: selectedCategories, priceRange, sortBy, page }],
@@ -118,21 +100,15 @@ export default function Products() {
         size: 12,
       }),
     staleTime: 2 * 60 * 1000,
-    placeholderData: { content: MOCK_PRODUCTS, totalElements: 20, totalPages: 2 },
   });
 
   const products = useMemo(() => {
-    const raw = data?.content || MOCK_PRODUCTS;
+    const raw = data?.content || [];
 
     let filtered = raw.filter(p => {
-      if (p.price < priceRange[0] || p.price > priceRange[1]) return false;
-      if (selectedCategories.length > 0) {
-        const matches = selectedCategories.some(slug => {
-          const label = CATEGORIES.find(c => c.id === slug)?.label || "";
-          return p.category?.name?.toLowerCase() === label.toLowerCase();
-        });
-        if (!matches) return false;
-      }
+      const effectivePrice = p.salePrice ?? p.price;
+      if (effectivePrice < priceRange[0] || effectivePrice > priceRange[1]) return false;
+      if (selectedCategories.length > 0 && !selectedCategories.includes(p.category?.slug)) return false;
       if (searchQuery) {
         if (!p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       }
@@ -140,9 +116,11 @@ export default function Products() {
     });
 
     filtered = [...filtered].sort((a, b) => {
-      if (sortBy === "price-asc")  return a.price - b.price;
-      if (sortBy === "price-desc") return b.price - a.price;
-      if (sortBy === "rating")     return b.avgRating - a.avgRating;
+      const aPrice = a.salePrice ?? a.price;
+      const bPrice = b.salePrice ?? b.price;
+      if (sortBy === "price-asc")  return aPrice - bPrice;
+      if (sortBy === "price-desc") return bPrice - aPrice;
+      if (sortBy === "rating")     return b.rating - a.rating;
       if (sortBy === "newest")     return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
       return b.reviewCount - a.reviewCount; // popularity
     });
@@ -182,10 +160,10 @@ export default function Products() {
           <div className="flex items-end justify-between">
             <div>
               <span className="label-luxury text-[#C17A35] block mb-2">
-                {categoryParam ? CATEGORIES.find(c => c.id === categoryParam)?.label : "All Products"}
+                {categoryParam ? categories.find(c => c.slug === categoryParam)?.name : "All Products"}
               </span>
               <h1 className="font-heading text-[#F5F0E8] text-4xl font-light">
-                {categoryParam ? CATEGORIES.find(c => c.id === categoryParam)?.label || "Products" : "Our Collection"}
+                {categoryParam ? categories.find(c => c.slug === categoryParam)?.name || "Products" : "Our Collection"}
               </h1>
             </div>
             <span className="text-sm text-[#9AAA9C] font-light">{products.length} products</span>
@@ -197,7 +175,7 @@ export default function Products() {
           <aside className="hidden lg:block w-60 flex-shrink-0">
             <div className="sticky top-24 bg-[#162018] border border-[#2A3A2C] rounded-2xl p-6">
               <h2 className="font-heading text-[#F5F0E8] text-xl font-light mb-6">Filters</h2>
-              <FilterPanel selectedCategories={selectedCategories} toggleCategory={toggleCategory} displayRange={displayRange} setDisplayRange={setDisplayRange} setPriceRange={setPriceRange} setPage={setPage} clearFilters={clearFilters} />
+              <FilterPanel categories={categories} selectedCategories={selectedCategories} toggleCategory={toggleCategory} displayRange={displayRange} setDisplayRange={setDisplayRange} setPriceRange={setPriceRange} setPage={setPage} clearFilters={clearFilters} />
             </div>
           </aside>
 
@@ -220,7 +198,7 @@ export default function Products() {
                   <SheetHeader>
                     <SheetTitle className="text-[#F5F0E8] font-heading font-light text-2xl">Filters</SheetTitle>
                   </SheetHeader>
-                  <div className="mt-6"><FilterPanel selectedCategories={selectedCategories} toggleCategory={toggleCategory} displayRange={displayRange} setDisplayRange={setDisplayRange} setPriceRange={setPriceRange} setPage={setPage} clearFilters={clearFilters} /></div>
+                  <div className="mt-6"><FilterPanel categories={categories} selectedCategories={selectedCategories} toggleCategory={toggleCategory} displayRange={displayRange} setDisplayRange={setDisplayRange} setPriceRange={setPriceRange} setPage={setPage} clearFilters={clearFilters} /></div>
                 </SheetContent>
               </Sheet>
 
@@ -267,7 +245,7 @@ export default function Products() {
               <div className="flex flex-wrap gap-2 mb-5">
                 {selectedCategories.map((cat) => (
                   <span key={cat} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E4620] border border-[#2A3A2C] text-[#C17A35] text-sm rounded-full font-light">
-                    {CATEGORIES.find(c => c.id === cat)?.label}
+                    {categories.find(c => c.slug === cat)?.name}
                     <button onClick={() => toggleCategory(cat)} className="text-[#9AAA9C] hover:text-[#F5F0E8]"><X className="w-3 h-3" /></button>
                   </span>
                 ))}

@@ -36,14 +36,16 @@ public class AdminController {
         long totalCustomers = userRepository.count();
         long lowStockProducts = productRepository.findByActiveTrue(PageRequest.of(0, Integer.MAX_VALUE))
                 .stream().filter(p -> p.getStock() < 10).count();
+        BigDecimal totalRevenue = orderRepository.sumTotalRevenue();
+        BigDecimal todaySales = orderRepository.sumRevenueSince(LocalDateTime.now().toLocalDate().atStartOfDay());
 
         return ResponseEntity.ok(Map.of(
                 "totalOrders", totalOrders,
                 "pendingOrders", pendingOrders,
                 "totalCustomers", totalCustomers,
                 "lowStockProducts", lowStockProducts,
-                "todaySales", 0,
-                "totalRevenue", 0
+                "todaySales", todaySales,
+                "totalRevenue", totalRevenue
         ));
     }
 

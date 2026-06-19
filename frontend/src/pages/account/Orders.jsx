@@ -22,12 +22,6 @@ const STATUS_LABELS = {
   DELIVERED: "Delivered", CANCELLED: "Cancelled", REFUNDED: "Refunded",
 };
 
-const MOCK_ORDERS = [
-  { id: 1, orderNumber: "KF-1733001234", createdAt: "2024-12-01", status: "DELIVERED",    total: 998, items: [{ productName: "California Almonds 500g", quantity: 2 }] },
-  { id: 2, orderNumber: "KF-1733005678", createdAt: "2024-12-05", status: "SHIPPED",      total: 499, items: [{ productName: "Medjool Dates 500g",      quantity: 1 }] },
-  { id: 3, orderNumber: "KF-1733009012", createdAt: "2024-12-08", status: "ORDER_PLACED", total: 749, items: [{ productName: "Iranian Pistachios 250g", quantity: 1 }] },
-];
-
 export default function Orders() {
   const [search, setSearch] = useState("");
   const [page] = useState(0);
@@ -35,10 +29,9 @@ export default function Orders() {
   const { data, isLoading } = useQuery({
     queryKey: ["my-orders", page],
     queryFn: () => orderService.getAll({ page, size: 10 }),
-    placeholderData: { content: MOCK_ORDERS, totalPages: 1 },
   });
 
-  const orders   = data?.content || MOCK_ORDERS;
+  const orders   = data?.content || [];
   const filtered = search ? orders.filter((o) => o.orderNumber.toLowerCase().includes(search.toLowerCase())) : orders;
 
   return (

@@ -19,41 +19,6 @@ import { useAuthStore } from "@/store/authStore";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 
-const MOCK_PRODUCT = {
-  id: 1,
-  name: "Premium California Almonds",
-  slug: "almonds",
-  price: 599,
-  salePrice: 499,
-  weight: 500,
-  unit: "g",
-  rating: 4.7,
-  reviewCount: 128,
-  stock: 50,
-  isBestseller: true,
-  categoryName: "Dry Fruits",
-  category: { id: 1, name: "Dry Fruits", slug: "dry-fruits" },
-  description: "Our Premium California Almonds are carefully hand-selected from the finest almond orchards in California. Rich in protein, healthy fats, and essential vitamins, these almonds make for the perfect healthy snack. Each almond is naturally dried to preserve its nutritional value and crunchy texture.",
-  images: [
-    { id: 1, url: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600&h=600&fit=crop", primary: true },
-    { id: 2, url: "https://images.unsplash.com/photo-1574570068036-f8f3bfb79571?w=600&h=600&fit=crop" },
-    { id: 3, url: "https://images.unsplash.com/photo-1604506818543-d45ca0f04a3a?w=600&h=600&fit=crop" },
-    { id: 4, url: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=600&h=600&fit=crop" },
-  ],
-  variants: [
-    { id: 1, name: "250g", weight: 250, price: 299, salePrice: 249, stock: 30 },
-    { id: 2, name: "500g", weight: 500, price: 599, salePrice: 499, stock: 50 },
-    { id: 3, name: "1kg", weight: 1000, price: 1099, salePrice: 949, stock: 20 },
-  ],
-  nutritionFacts: "Per 28g serving: Calories 160 | Protein 6g | Fat 14g | Carbs 6g | Fiber 3.5g | Vitamin E 37% DV | Magnesium 19% DV",
-};
-
-const MOCK_REVIEWS = [
-  { id: 1, user: { name: "Priya S." }, rating: 5, comment: "Excellent quality almonds! Fresh, crunchy and arrived well-packaged. Will definitely order again.", createdAt: "2024-12-01", verified: true },
-  { id: 2, user: { name: "Raj K." }, rating: 4, comment: "Good quality, slightly smaller than expected but taste is great.", createdAt: "2024-11-28", verified: true },
-  { id: 3, user: { name: "Anita M." }, rating: 5, comment: "Best almonds I've had! Ordering for the 3rd time now.", createdAt: "2024-11-20", verified: true },
-];
-
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -69,24 +34,21 @@ export default function ProductDetail() {
   const addItem = useCartStore((s) => s.addItem);
   const { toggle, has } = useWishlistStore();
 
-  const { data: product } = useQuery({
+  const { data: product, isLoading: productLoading } = useQuery({
     queryKey: ["product", slug],
     queryFn: () => productService.getBySlug(slug),
-    placeholderData: MOCK_PRODUCT,
   });
 
-  const { data: recommendationsData } = useQuery({
+  const { data: recommendations } = useQuery({
     queryKey: ["recommendations", product?.id],
     queryFn: () => productService.getRecommendations(product?.id),
     enabled: !!product?.id,
-    placeholderData: { content: [] },
   });
 
   const { data: reviewsData } = useQuery({
     queryKey: ["reviews", product?.id],
     queryFn: () => productService.getReviews(product?.id),
     enabled: !!product?.id,
-    placeholderData: MOCK_REVIEWS,
   });
 
   const reviewMutation = useMutation({
@@ -96,7 +58,7 @@ export default function ProductDetail() {
       setReviewForm({ rating: 0, comment: "" });
       toast.success("Review submitted! It will appear after approval.");
     },
-    onError: (err) => toast.error(err?.response?.data?.message || "Failed to submit review"),
+    onError: (err) => toast.error(err?.message || "Failed to submit review"),
   });
 
   const handleReviewSubmit = (e) => {
@@ -106,8 +68,26 @@ export default function ProductDetail() {
     reviewMutation.mutate(reviewForm);
   };
 
-  const p = product || MOCK_PRODUCT;
-  const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.content || MOCK_REVIEWS;
+  const reviews = reviewsData?.content || [];
+
+  if (productLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center text-[#8B6914]">
+        Loading…
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <p className="text-[#3D2000] text-lg font-medium mb-4">Product not found</p>
+        <Link to="/products" className="text-[#C8860A] hover:underline">Back to Products</Link>
+      </div>
+    );
+  }
+
+  const p = product;
   const isWishlisted = has(p.id);
 
   const activeVariant = selectedVariant || (p.variants?.[1] ?? null);
@@ -141,7 +121,7 @@ export default function ProductDetail() {
         <Link to="/products" className="hover:text-[#C8860A]">Products</Link>
         <ChevronRight className="w-3 h-3" />
         <Link to={`/products?category=${p.category?.slug}`} className="hover:text-[#C8860A]">
-          {p.categoryName || p.category?.name}
+          {p.category?.name}
         </Link>
         <ChevronRight className="w-3 h-3" />
         <span className="text-[#3D2000] font-medium truncate max-w-48">{p.name}</span>
@@ -205,7 +185,7 @@ export default function ProductDetail() {
 
         {/* Product Info */}
         <div>
-          {p.isBestseller && (
+          {p.bestseller && (
             <Badge className="bg-[#C8860A] text-white mb-3">⭐ BESTSELLER</Badge>
           )}
           <h1 className="text-3xl font-bold text-[#3D2000] mb-3" style={{ fontFamily: "serif" }}>
@@ -494,13 +474,13 @@ export default function ProductDetail() {
       </Tabs>
 
       {/* Recommendations */}
-      {recommendationsData?.content?.length > 0 && (
+      {recommendations?.length > 0 && (
         <section>
           <h2 className="text-2xl font-bold text-[#3D2000] mb-6" style={{ fontFamily: "serif" }}>
             You May Also Like
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {recommendationsData.content.map((prod) => (
+            {recommendations.map((prod) => (
               <ProductCard key={prod.id} product={prod} />
             ))}
           </div>

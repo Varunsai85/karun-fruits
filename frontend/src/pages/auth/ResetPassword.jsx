@@ -5,7 +5,6 @@ import { Eye, EyeOff, Lock, CheckCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/services/authService";
-import { toast } from "sonner";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -16,12 +15,14 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [formError, setFormError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!token) { toast.error("Invalid reset link"); return; }
-    if (form.password !== form.confirmPassword) { toast.error("Passwords do not match"); return; }
-    if (form.password.length < 8) { toast.error("Password must be at least 8 characters"); return; }
+    setFormError(null);
+    if (!token) { setFormError("Invalid reset link"); return; }
+    if (form.password !== form.confirmPassword) { setFormError("Passwords do not match"); return; }
+    if (form.password.length < 8) { setFormError("Password must be at least 8 characters"); return; }
 
     setLoading(true);
     try {
@@ -29,7 +30,7 @@ export default function ResetPassword() {
       setSuccess(true);
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to reset password. The link may have expired.");
+      setFormError(err?.message || "Failed to reset password. The link may have expired.");
     } finally {
       setLoading(false);
     }
@@ -99,6 +100,12 @@ export default function ResetPassword() {
                 onSubmit={handleSubmit}
                 className="space-y-5"
               >
+                {formError && (
+                  <div className="p-4 bg-red-900/30 border border-red-700/50 rounded-xl text-sm">
+                    <p className="text-red-300">{formError}</p>
+                  </div>
+                )}
+
                 <div>
                   <Label className="text-[#9AAA9C] text-xs font-light tracking-wide">New Password</Label>
                   <div className="relative mt-2">

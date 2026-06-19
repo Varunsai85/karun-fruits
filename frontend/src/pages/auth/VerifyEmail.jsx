@@ -24,14 +24,14 @@ export default function VerifyEmail() {
     authService
       .verifyEmail(token)
       .then((res) => {
-        login(res.data.user, res.data.token);
+        login(res.user, res.token);
         setStatus("success");
         setTimeout(() => navigate("/"), 3000);
       })
       .catch((err) => {
         setStatus("error");
         setErrorMsg(
-          err?.response?.data?.message || "Invalid or expired verification link."
+          err?.message || "Invalid or expired verification link."
         );
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps

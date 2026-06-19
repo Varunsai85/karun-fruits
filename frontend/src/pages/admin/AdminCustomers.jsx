@@ -19,7 +19,7 @@ export default function AdminCustomers() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-customers", page],
-    queryFn: () => api.get(`/admin/customers?page=${page}&size=20`).then(r => r.data),
+    queryFn: () => api.get(`/admin/customers?page=${page}&size=20`),
   });
 
   const toggleMutation = useMutation({

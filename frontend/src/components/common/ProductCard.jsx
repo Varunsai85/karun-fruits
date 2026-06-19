@@ -13,8 +13,10 @@ export default function ProductCard({ product }) {
   const { toggle, has }       = useWishlistStore();
   const wishlisted            = has(product.id);
 
-  const discountPct = product.originalPrice
-    ? Math.round((1 - product.price / product.originalPrice) * 100)
+  const currentPrice = product.salePrice ?? product.price;
+  const originalPrice = product.salePrice ? product.price : null;
+  const discountPct = originalPrice
+    ? Math.round((1 - currentPrice / originalPrice) * 100)
     : 0;
 
   const handleAddToCart = (e) => {
@@ -58,7 +60,7 @@ export default function ProductCard({ product }) {
                 New
               </span>
             )}
-            {product.isBestSeller && (
+            {product.bestseller && (
               <span className="label-luxury bg-[#1D2B1F] text-[#C17A35] border border-[#2A3A2C] px-2 py-0.5 rounded-md text-[10px]">
                 Bestseller
               </span>
@@ -109,15 +111,15 @@ export default function ProductCard({ product }) {
           </h3>
 
           {/* Rating */}
-          {product.avgRating > 0 && (
+          {product.rating > 0 && (
             <div className="flex items-center gap-1.5 mb-3">
               <div className="flex">
                 {[1,2,3,4,5].map((n) => (
                   <Star
                     key={n}
                     className="w-3 h-3"
-                    fill={n <= Math.round(product.avgRating) ? "#C17A35" : "none"}
-                    stroke={n <= Math.round(product.avgRating) ? "#C17A35" : "#2A3A2C"}
+                    fill={n <= Math.round(product.rating) ? "#C17A35" : "none"}
+                    stroke={n <= Math.round(product.rating) ? "#C17A35" : "#2A3A2C"}
                   />
                 ))}
               </div>
@@ -127,14 +129,14 @@ export default function ProductCard({ product }) {
 
           {/* Price */}
           <div className="flex items-baseline gap-2">
-            <span className="font-heading text-[#F5F0E8] text-xl font-medium">{formatPrice(product.price)}</span>
-            {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-sm text-[#5A6A5C] line-through">{formatPrice(product.originalPrice)}</span>
+            <span className="font-heading text-[#F5F0E8] text-xl font-medium">{formatPrice(currentPrice)}</span>
+            {originalPrice && (
+              <span className="text-sm text-[#5A6A5C] line-through">{formatPrice(originalPrice)}</span>
             )}
           </div>
 
-          {product.weightOptions?.[0] && (
-            <span className="text-xs text-[#7A8F7C] mt-1 block">from {product.weightOptions[0]}</span>
+          {product.weight && (
+            <span className="text-xs text-[#7A8F7C] mt-1 block">{product.weight}{product.unit}</span>
           )}
         </div>
       </motion.div>

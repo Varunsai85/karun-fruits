@@ -14,7 +14,7 @@ export default function AdminCategories() {
 
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ["admin-categories"],
-    queryFn: () => api.get("/admin/categories").then(r => r.data),
+    queryFn: () => api.get("/admin/categories"),
   });
 
   const saveMutation = useMutation({
