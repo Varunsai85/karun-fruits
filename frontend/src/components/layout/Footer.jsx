@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Tv } from "lucide-react";
+import { Phone, Mail, MapPin, Tv, Truck, Leaf, ShieldCheck, Undo2 } from "lucide-react";
 
 const CATEGORIES = [
   { name: "Almonds",        slug: "almonds" },
@@ -50,15 +50,17 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
-              { icon: "🚚", title: "Free Delivery",   sub: "Orders above ₹499" },
-              { icon: "✦",  title: "100% Natural",    sub: "No preservatives" },
-              { icon: "🔒", title: "Secure Payment",  sub: "Razorpay protected" },
-              { icon: "↩",  title: "Easy Returns",    sub: "7-day return policy" },
-            ].map((b) => (
-              <div key={b.title} className="flex flex-col items-center gap-1.5">
-                <span className="text-xl">{b.icon}</span>
-                <span className="label-luxury text-[#C17A35]">{b.title}</span>
-                <span className="text-xs">{b.sub}</span>
+              { Icon: Truck,       title: "Free Delivery",  sub: "Orders above ₹499" },
+              { Icon: Leaf,        title: "100% Natural",   sub: "No preservatives" },
+              { Icon: ShieldCheck, title: "Secure Payment", sub: "Razorpay protected" },
+              { Icon: Undo2,       title: "Easy Returns",   sub: "7-day return policy" },
+            ].map(({ Icon, title, sub }) => (
+              <div key={title} className="flex flex-col items-center gap-1.5">
+                <div className="w-10 h-10 rounded-full border border-[#2A3A2C] bg-[#0F1A0F] flex items-center justify-center mb-1">
+                  <Icon className="w-4 h-4 text-[#C17A35]" />
+                </div>
+                <span className="label-luxury text-[#C17A35]">{title}</span>
+                <span className="text-xs">{sub}</span>
               </div>
             ))}
           </div>

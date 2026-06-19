@@ -1,19 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Truck, ShieldCheck, Award, RefreshCw, Star } from "lucide-react";
+import { ArrowRight, Truck, ShieldCheck, Award, RefreshCw, Star, Gem, Shell, Leaf, Nut, Bean, Sprout, CircleDot, Gift } from "lucide-react";
 import ProductCard from "@/components/common/ProductCard";
 import { productService } from "@/services/productService";
 
 const CATEGORIES = [
-  { name: "Almonds",    slug: "almonds",    emoji: "🌰" },
-  { name: "Cashews",    slug: "cashews",    emoji: "🥜" },
-  { name: "Pistachios", slug: "pistachios", emoji: "💚" },
-  { name: "Walnuts",    slug: "walnuts",    emoji: "🧠" },
-  { name: "Dates",      slug: "dates",      emoji: "🫘" },
-  { name: "Seeds",      slug: "seeds",      emoji: "🌿" },
-  { name: "Makhana",    slug: "makhana",    emoji: "⚪" },
-  { name: "Gift Boxes", slug: "gift-boxes", emoji: "🎁" },
+  { name: "Almonds",    slug: "almonds",    Icon: Gem },
+  { name: "Cashews",    slug: "cashews",    Icon: Shell },
+  { name: "Pistachios", slug: "pistachios", Icon: Leaf },
+  { name: "Walnuts",    slug: "walnuts",    Icon: Nut },
+  { name: "Dates",      slug: "dates",      Icon: Bean },
+  { name: "Seeds",      slug: "seeds",      Icon: Sprout },
+  { name: "Makhana",    slug: "makhana",    Icon: CircleDot },
+  { name: "Gift Boxes", slug: "gift-boxes", Icon: Gift },
 ];
 
 const WHY_US = [
@@ -145,7 +145,9 @@ export default function Home() {
                   to={`/products?category=${cat.slug}`}
                   className="group flex flex-col items-center gap-2.5 p-4 bg-[#162018] border border-[#2A3A2C] rounded-2xl hover:border-[#C17A35]/50 hover:shadow-md transition-all text-center"
                 >
-                  <span className="text-2xl">{cat.emoji}</span>
+                  <div className="w-10 h-10 rounded-full border border-[#2A3A2C] bg-[#0F1A0F] flex items-center justify-center">
+                    <cat.Icon className="w-4 h-4 text-[#C17A35]" />
+                  </div>
                   <span className="text-xs text-[#7A8F7C] group-hover:text-[#F5F0E8] transition-colors font-light leading-tight">
                     {cat.name}
                   </span>
