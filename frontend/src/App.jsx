@@ -4,6 +4,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { lazy, Suspense } from "react";
 import Layout from "@/components/layout/Layout";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import { useAuthStore } from "@/store/authStore";
 
 const Home = lazy(() => import("@/pages/Home"));
@@ -76,6 +77,7 @@ export default function App() {
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
+            <ScrollToTop />
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* Admin routes — no Layout wrapper */}
